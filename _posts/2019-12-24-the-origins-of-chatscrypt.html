@@ -5,7 +5,7 @@ comments: true
 date: 2019-12-24
 ---
 
-My first inclinations to begin the <a href="https://chatscrypt.herokuapp.com/">ChatScrypt</a> project germinated in response to the decline (in the opinion of this developer) of gchat, as it moved away from a session-based, searchable, reviewable message history, as well from a compact, simple chat interface, in favor of the infinite-scroll, always-on, space-inefficient implementation via Hangouts. This alone wasn't enough to prod me into doing anything about it, but then in early 2019, Google announced the eventual retirement of Hangouts itself.
+My first inclinations to begin the <a href="https://chatscrypt.herokuapp.com/">ChatScrypt</a> project germinated in response to the decline (in the opinion of this developer) of Gchat, as it moved away from a session-based, searchable, reviewable message history, as well from a compact, simple chat interface, in favor of the infinite-scroll, always-on, space-inefficient implementation via Hangouts. This alone wasn't enough to prod me into doing anything about it, but then in early 2019, Google announced the eventual retirement of Hangouts itself.
 
 <p>In response, I thought it would be educational to try to code a simple chat client, with the specific features that I wanted. My background includes some basic algorithms and theoretical computer science, as well as coding in C and Java - the type of training that gives the student confidence enough to code anything, at least within the confines of one machine. Accordingly, to my mind, as soon as I figured out how to transmit morse code or an equivalent via the internet - the educational bit to this project - the rest would be like filling in a coloring book.
   
@@ -13,7 +13,7 @@ My first inclinations to begin the <a href="https://chatscrypt.herokuapp.com/">C
   
 <ul>
   
-<li> I realized that for this program to be useful for communication in which one endpoint isn't me, I would need to ensure that I could not read the messages in my database - messages between my friend and his wife, for instance. I looked for a standard protocol to shield messages from the mediating software developers, but to my surprise, there was no such protocol. In principle, any Google engineer can read any user's messages and emails (and presumably the messages of their gmail-using friends, incidentally). So-called "end-to-end encryption" was relegated to the preferred software of only the famously paranoid (Snowden seems to be a common name in this business).
+<li> I realized that for this program to be useful for communication in which one endpoint isn't me, I would need to ensure that I could not read the messages in my database - messages between my friend and his wife, for instance. I looked for a standard protocol to shield messages from the mediating software developers, but to my surprise, there was no such protocol. In principle, any Google engineer can read any user's messages and emails (and presumably the messages of their Gmail-using friends, incidentally). So-called "end-to-end encryption" was relegated to the preferred software of only the famously paranoid (Snowden seems to be a common name in this business).
 
 <li> In recent years, end-to-end encryption has become more popular (Whatsapp, Telegram, Signal) but typically is tied to poor message history and reviewability for the user. This is understandable, as encrypted data is inherently unsearchable. It seems that the challenge is to find an appropriate balance between security and usability.
 
