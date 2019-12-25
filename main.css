@@ -1,0 +1,157 @@
+/* Link settings ----------------------------------------------------*/
+
+a {
+    text-decoration: none;
+    color: #888;
+}
+a:hover {
+    color: #333;
+}
+
+h1 a {
+    color: #333;
+}
+
+
+h1 a:hover {
+    color: #888;
+}
+
+
+/* Source settings ----------------------------------------------------*/
+
+.source {
+    color: #333;
+    font-size: 0.8em;
+}
+
+.source a {
+    color: #888;
+}
+
+.source a:hover {
+    color: #333;
+}
+
+
+.sourceButton {
+    cursor:pointer;  
+}
+
+
+/* Font and style settings ----------------------------------------------------*/
+
+html {
+    max-width: 95%;
+    margin: auto;
+}
+
+body {
+    font-family: 'Roboto', 'Source Sans Pro', 'PT Serif', Sans-Serif;    
+    max-width: 960px;
+    margin: auto;
+    line-height: 1.6;
+    color: #333;
+    background-color: #fff;
+    min-width: 320px;
+}
+
+h1 {     
+    font-family: 'PT Serif', Serif;
+    font-size: 1.8em;
+    margin-bottom: 0px;
+    padding-top: 0px;
+    margin-top: 0px;
+}
+
+.excerpt {
+  border-radius: 15px;
+  background-color: #f9f9f9;
+  padding: 15px;
+  margin-bottom:15px;
+}
+
+.media {
+  border-radius: 15px;
+  display: block;
+  margin-top: 2em;
+  margin-bottom: 2em;
+  margin-left: 15px;
+  margin-right: 15px;
+  padding: 15px;
+  background-color: #f9f9f9;
+}
+
+.media img {
+   display: block;
+   max-width: 100%;  
+   max-height: 640px;
+   margin-left: auto;
+   margin-right: auto;
+}
+
+.post {
+  background-color: #fff;
+  padding: 15px;
+}
+
+#disqus_thread {   
+  border-radius: 15px;
+  background-color: #f9f9f9;
+  padding-top: 15px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.date-format {
+    font-size: 0.8em;
+}
+
+/* Title settings ----------------------------------------------------*/
+
+.site-header {
+    color: #333;
+    margin-top: 15px;    
+    margin-bottom: 15px;
+   margin-left: 15px;
+    display: flex;
+    flexwrap: wrap;
+}
+
+.site-header div {    
+    flex: 1 1 0;
+}
+
+.site-header-title {   
+    font-family: 'PT Serif', Serif; 
+    font-size: 1.8em;
+}
+
+.site-header-nav {
+    text-align: right;
+    font-size: 1em;
+}
+
+.site-header-nav ul li {
+    display: inline;
+    margin-right: 15px;
+}
+
+/* Page navigation settings ----------------------------------------------------*/
+
+.post-nav {
+    margin-top: 15px;    
+    margin-bottom: 15px;
+    margin-left: 15px;
+    display: flex;
+    flexwrap: wrap;
+}
+.post-nav div {
+    /* flex-grow, flex-shrink, flex-basis */
+    flex: 1 1 0;
+    width: 45%;
+}
+.post-nav-next {
+    text-align: right;
+   margin-right: 15px;
+}

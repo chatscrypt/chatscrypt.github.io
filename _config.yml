@@ -1,0 +1,4 @@
+name: ChatScrypt
+permalink: /:year/:month/:day/:title
+plugins:
+  - jekyll-seo-tag
