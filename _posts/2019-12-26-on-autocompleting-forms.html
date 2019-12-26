@@ -1,0 +1,28 @@
+---
+layout: post
+title: "On Autocompleting Forms"
+comments: true
+date: 2019-12-26
+---
+
+<b>Autocomplete will be turned off for forms on ChatScrypt, at every opportunity.</b>
+
+<p>There is a nice discussion on the matter of Autocomplete <a href="https://security.stackexchange.com/questions/49326/should-websites-be-allowed-to-disable-autocomplete-on-forms-or-fields">here</a>.
+
+<p>The gist of it is that unfortunately, autocomplete is an umbrella feature for two distinct features, one of which is useful (practically imperative); the other of which is insecure, or risky at best:
+
+<ul>
+<li> Predictive (often cross-site) autocomplete: Autocomplete that reads the field entry prompt, say, "Email:", remembers all the other times, including on other sites, you have filled in an Email field, and offers them as suggestions. This is the bad kind of autocomplete.
+
+<li>Repetitive (same-site) autocomplete: Autocomplete that sees you filling out an identical form, on the same site, repeatedly, and does it for you. Having this feature is not just convenient: It also protects against phishing, as a fake bank website will not have autocomplete on; the absence of autocomplete is an implicit tip from the browser to the user that something is fishy.
+</ul> 
+
+For ChatScrypt, I have decided to turn off autocomplete at every opportunity, because:
+
+<ul>
+<li> It seems that reputable browsers have now established a proper distinction between the two forms of autocomplete. Autocomplete is now synonymous with the predictive, "bad" kind, and so the decision was easy. (The "good" kind is probably preferred to as something like "password management.")
+
+<li> Autocomplete is not forgiving of typos: If I mistype my username once, the typo is always re-offered until I dig into browser settings to erase the typo.
+
+<li> In instances where autocomplete actually would be useful (eg. search), I would rather implement it on my own in a more transparent way than what modern browsers and sites (eg. Gmail) currently provide. 
+</ul>
