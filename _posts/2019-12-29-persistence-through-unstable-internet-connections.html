@@ -7,7 +7,7 @@ date: 2019-12-29
 
 I took a couple of days off posting, finishing off the actual (though still basic) chat feature of ChatScrypt. There are multiple design choices to discuss; in this post I would like to discuss the matter of maintaining a coherent chat session through intermittent internet reconnection events.
 
-<p>Philosophically, obtaining security and stability coincide nicely, since both essentially requires me to keep an eye on each time a signal is sent from the client/broser to the server. It is convenient to think about the client as an offline program, sending and receiving messages to and from the server on rare occasions. At the moment, aside from login and logout, I have isolated communications into three situations:
+<p>Philosophically, obtaining security and stability coincide nicely, since both require me to keep an eye on each time a signal is sent from the client/broser to the server. It is convenient to think about the client as an offline program, sending and receiving messages to and from the server on rare occasions. At the moment, aside from login and logout, I have isolated communications into three situations:
 
 <ul>
 <li> adding users to your contacts list,
