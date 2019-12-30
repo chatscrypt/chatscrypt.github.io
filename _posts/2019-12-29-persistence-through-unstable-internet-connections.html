@@ -32,7 +32,7 @@ This is actually a bit controversial and subject to change, due to the question 
 
   <h2>Sending Messages</h2>
 
-Uncontroversial as far as I can tell: Rather than emitting messages immediately, I stage them in a message queue offline, and remove theme as the server confirms successful receipt. Currently, the message queue is visually implemented via italics (the standard font is restored after a successful send).
+Uncontroversial as far as I can tell: Rather than emitting messages directly, I stage them in a message queue offline, and remove theme as the server confirms successful receipt. Currently, the message queue is visually implemented via italics (the standard font is restored after a successful send).
 
 <p>Note: If a chat window is closed, its corresponding message queue is erased.
 
