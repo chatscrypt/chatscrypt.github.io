@@ -17,7 +17,7 @@ I took a couple of days off posting, finishing off the actual (though still basi
 
 There are a few small design choices underlying each case:
 
-<h2> The Contact List
+<h2>The Contact List</h2>
 
 This is actually a bit controversial and subject to change, due to the question of whether it is secure to store all of a user's interactions with other users in one list. I decided to include one for now, because:
 
@@ -30,13 +30,13 @@ This is actually a bit controversial and subject to change, due to the question 
 <ul>
 
 
-<h2> Sending Messages
+  <h2>Sending Messages</h2>
 
 Uncontroversial as far as I can tell: Rather than emitting messages immediately, I stage them in a message queue offline, and remove theme as the server confirms successful receipt. Currently, the message queue is visually implemented via italics (the standard font is restored after a successful send).
 
 Note: If a chat window is closed, its corresponding message queue is erased.
 
-<h3> Receiving Messages
+  <h2>Receiving Messages</h2>
 
 I had some design choices to make here:
 
