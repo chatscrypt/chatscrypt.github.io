@@ -22,7 +22,7 @@ There are a few small design choices underlying each case:
 This is actually a bit controversial and subject to change, due to the question of whether it is secure to store all of a user's interactions with other users in one list. I decided to include one for now, because:
 
 <ul>
-<li> At the moment it is convenient as simply a way to isolate the matter of verifying whether a username/contact matches an existing account, as this requires confirmation from the server. The existence of a contact list makes message drafting a purely offline matter.
+<li> At the moment it is convenient as simply a way to isolate the matter of verifying whether a username/contact matches an existing account, as this requires confirmation from the server. I can handle this carefully and in an isolated way, queuing requests locally and sending verification requests from this queue (similar to the message queue below). The benefit is that the more important and frequent task of message drafting a purely local/offline matter, hence entirely robust across reconnection events.
 
 <li> The (future) feature of autocompleting past recipients is too convenient to pass over and requires a contact list one way or another. 
 
@@ -32,7 +32,7 @@ This is actually a bit controversial and subject to change, due to the question 
 
   <h2>Sending Messages</h2>
 
-Uncontroversial as far as I can tell: Rather than emitting messages directly, I stage them in a message queue offline, and remove them as the server confirms successful receipt. Currently, the message queue is visually implemented via italics (the standard font is restored after a successful send).
+Uncontroversial as far as I can tell: Rather than emitting messages directly, I stage them in a message queue locally/offline, and remove them as the server confirms successful receipt. Currently, the message queue is visually implemented via italics (the standard font is restored after a successful send).
 
 <p>Note: If a chat window is closed, its corresponding message queue is erased.
 
