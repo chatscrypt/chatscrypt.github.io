@@ -1,0 +1,37 @@
+---
+layout: post
+title: "The Signal Protocol Part I: An Introduction"
+comments: true
+date: 2020-01-03
+---
+
+I took a bit of time off from coding and started scoping the competition from other chat clients with end-to-end encryption: Telegram, Whatsapp, and Signal. 
+
+<p> So far, it seems Telegram doesn't really try to integrate its end-to-end encryption feature with its message history and transcription, so I didn't read much into it.
+
+<p> Whatsapp uses the cryptography underlying Signal, so I focused my research on the latter. 
+
+<p> It turns out the Signal protocol is complicated and enjoys many properties, and the literature on it is a bit technical. I was thus motivated to take a break from coding and to blog a bit, to describe the protocol and its properties to a "techincal layperson."
+
+<p> An aside and a little context: While researching these cryptographic protocols, I was looking for properties that were missing from the existing protocols, hoping to find missing properties that I could improve upon. Instead, I found the Signal protocol tremendously complicated with very many good properties I hadn't even considered. This begged the question: Why is the Signal protocol so complicated? What are all of these properties that I didn't even think of?
+
+<p>I think I found the answer in the following: An important assumption of the Signal protocol is that the server is <i>benevolent</i>, doing its best to shield traffic from potential <i>malevolent eavescroppers</i>. To my mind, there are desirable security properties (many advertised by the Signal protocol) that are impossible to implement if you assume that even the server is malevolently eavesdropping. With a benevolent server on your side, however, there is a lot more that can be done; and indeed all of this work is put into the Signal protocol. This is vague (and not entirely clear to me at the time of writing), so I may revisit it in context later.
+
+<h2>An Overview</h2>
+
+It seems there are two main components to the Signal protocol:
+
+<ul>
+<li> Extended Triple Diffie-Hellman: This handles the initial key exchange. A key property is that it does not require the two communicating parties to be online simultaneously (the vocabulary Signal uses for this is "asyncrhonous").
+<li> Double Ratchet: This handles the encryption and sending of messages, as well as the creation of new keys in the course of communications. The key feature of this is backward and forward secrecy: The exposure of a single key does not compromise past nor future messages/keys. 
+</ul>
+
+These are high level recipes for managing public/private/shared keys, the encryption of messages, etc. There are also some basic building blocks worth explaining:
+
+<ul>
+<li>XEdDSA and VXEdDSA: I actually don't know what these are but they seem to be digital signature algorithms, for proof of identity.
+<li>Diffie-Hellman: The basic and well-known key exchange protocol.
+<li>Elliptic curve cryptography: The main encryption function.
+</ul>
+
+I intend Part II to be about these building blocks, known as "cryptographic primitives."
