@@ -51,5 +51,5 @@ I had some design choices to make here:
 <ul>
 <li> In the style of email, and in contrast to services like Gchat, chat windows can only be opened by the user (in Gchat and I believe other apps, a new message will automatically pop open a new chat window). Instead, also similar to email, the list of chats updates real-time. The philosophy is that windows should not appear unprompted, especially where the user might be actively clicking. As a happy side effect, this sidesteps the many issues of new incoming chats during internet downtime.
 
-<li>Already-open chat windows do receive messages real-time, of course. On reconnection events, they reload messages from the database (and hence load any messages that would have been received during any downtime).
+<li>Already-open chat windows do receive messages real-time, of course. On reconnection events, they reload messages from the database (and hence load messages received during any downtime).
 </ul> 
