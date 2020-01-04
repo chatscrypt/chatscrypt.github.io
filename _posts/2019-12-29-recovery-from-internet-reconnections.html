@@ -30,7 +30,7 @@ Philosophically, obtaining security and stability coincide nicely, since both re
 This is actually a bit controversial and subject to change, due to the question of whether it is secure to store all of a user's interactions with other users in one list. I decided to include one for now, because:
 
 <ul>
-<li> At the moment it is convenient as simply a way to isolate the matter of verifying whether a username/contact matches an existing account, as this requires confirmation from the server. I can handle this carefully and in an isolated way, queuing requests locally and sending verification requests from this queue (similar to the message queue below). The benefit is that the more important and frequent task of message drafting becomes a purely local/offline matter, hence entirely robust across reconnection events.
+<li> At the moment it is convenient as simply a way to isolate the matter of verifying whether a username/contact matches an existing account, as this requires confirmation from the server. I can handle this carefully and in an isolated way, queuing requests locally and sending verification requests from this queue. The benefit is that the more important and frequent task of message drafting becomes a purely local/offline matter (querying a verified contact list stored in local memory), hence entirely robust across reconnection events.
 
 <li> The (future) feature of autocompleting past recipients is too convenient to pass over and requires a contact list one way or another. 
 
