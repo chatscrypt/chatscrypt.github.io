@@ -5,17 +5,25 @@ comments: true
 date: 2019-12-29
 ---
 
-I took a couple of days off posting, finishing off the actual (though still basic) chat feature of ChatScrypt. There were multiple design choices I made that merit discussion. In this post, I would like to discuss the matter of maintaining a coherent chat session through intermittent internet reconnection events. The goal is to preserve offline usability to the greatest extent possible. 
+I took a couple of days off posting, finishing off the actual (though still basic) chat feature of ChatScrypt. There were multiple design choices I made that merit discussion. For this post, I would like to discuss how ChatScrypt currently maintains a coherent chat session through intermittent internet reconnection events, due for instance to an unstable wifi or data connection, or the user's own switching of wifi or data networks. These events should be common, for instance on a mobile device.
 
-<p>Philosophically, obtaining security and stability coincide nicely, since both require me to keep an eye on each time a signal is sent from the client/broser to the server. It is convenient to think about the client as an offline program, sending and receiving messages to and from the server on rare occasions. At the moment, aside from login and logout, I have isolated communications into three situations:
+The goals are to
+<ul>
+  <li> preserve offline usability to the greatest extent possible. 
+  <li> and have a seemless continuation of communications once reconnected to the network. 
+    <ul>
+
+Philosophically, obtaining security and stability coincide nicely, since both require me to keep an eye on each time a signal is sent from the client/broser to the server. It is convenient to think about the client as an offline program, sending and receiving messages to and from the server on rare occasions. At the moment, aside from login and logout, I have isolated communications into three situations:
 
 <ul>
 <li> adding users to your contact list,
 <li> sending messages,
 <li> and receiving messages.
 </ul>
+      
+<p> In some sense, I have adopted a straightforward solution: All data sent to the server is queued and emitted at the same time; it is removed from the queue if the successful delivery of the data is confirmed (currently, the confirmation takes the form of a "boomerang" signal from the server).
 
-There are a few small design choices underlying each case:
+There are a few small design choices underlying each case above:
 
 <h2>The Contact List</h2>
 
