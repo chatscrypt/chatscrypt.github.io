@@ -21,9 +21,9 @@ Philosophically, obtaining security and stability coincide nicely, since both re
 <li> and receiving messages.
 </ul>
       
-<p> I have adopted a straightforward solution: All data sent to the server is also queued at the same time; it is removed from the queue if the successful delivery of the data is confirmed (currently, the confirmation takes the form of a "boomerang" signal from the server). On every reconnection, all data in queues is emitted again.
+<p> I have adopted a straightforward solution: All data sent to the server is also staged in a queue at the same time; it is removed from the queue if the successful delivery of the data is confirmed (currently, the confirmation takes the form of a "boomerang" signal from the server). On every reconnection, all data in queues is emitted again.
 
-There are a few small design choices underlying each case above:
+<p> There are a few small design choices underlying each of the three cases above:
 
 <h2>The Contact List</h2>
 
@@ -40,7 +40,7 @@ This is actually a bit controversial and subject to change, due to the question 
 
   <h2>Sending Messages</h2>
 
-Uncontroversial as far as I can tell: Rather than emitting messages directly, I stage them in a message queue locally/offline, and remove them as the server confirms successful receipt. Currently, the message queue is visually implemented via italics (the standard font is restored after a successful send).
+Uncontroversial as far as I can tell: In addition to emitting messages directly, I stage them in a message queue in memory/offline, and remove them as the server confirms successful receipt. Currently, the message queue is visually implemented via italics (the standard font is restored after a successful send).
 
 <p>Note: If a chat window is closed, its corresponding message queue is erased.
 
