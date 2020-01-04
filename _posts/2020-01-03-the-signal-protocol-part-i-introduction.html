@@ -22,7 +22,7 @@ I took a bit of time off from coding and started scoping the competition from ot
 It seems there are two main components to the Signal protocol:
 
 <ul>
-<li> Extended Triple Diffie-Hellman: This handles the initial key exchange. A key property is that it does not require the two communicating parties to be online simultaneously (the vocabulary Signal uses for this is "asyncrhonous").
+<li> Extended Triple Diffie-Hellman: This handles the initial key exchange. A key property is that it does not require the two communicating parties to be online simultaneously (the vocabulary Signal uses for this is "asynchronous").
 <li> Double Ratchet: This handles the encryption and sending of messages, as well as the creation of new keys in the course of communications. The key feature of this is backward and forward secrecy: The exposure of a single key compromises neither past nor future messages/keys. 
 </ul>
 
