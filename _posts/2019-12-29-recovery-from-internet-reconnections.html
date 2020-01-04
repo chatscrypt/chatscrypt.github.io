@@ -21,7 +21,7 @@ Philosophically, obtaining security and stability coincide nicely, since both re
 <li> and receiving messages.
 </ul>
       
-<p> In some sense, I have adopted a straightforward solution: All data sent to the server is queued and emitted at the same time; it is removed from the queue if the successful delivery of the data is confirmed (currently, the confirmation takes the form of a "boomerang" signal from the server).
+<p> I have adopted a straightforward solution: All data sent to the server is also queued at the same time; it is removed from the queue if the successful delivery of the data is confirmed (currently, the confirmation takes the form of a "boomerang" signal from the server). On every reconnection, all data in queues is emitted again.
 
 There are a few small design choices underlying each case above:
 
