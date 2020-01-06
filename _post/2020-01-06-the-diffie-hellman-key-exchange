@@ -1,0 +1,23 @@
+---
+layout: post
+title: "The Signal Protocol Part II: The Diffie–Hellman Key Exchange"
+comments: true
+date: 2020-01-06
+---
+
+Change of plan: In this post I'll discuss the Diffie-Hellman key exchange in increasing levels of complexity from the original formulation to the Signal protocol's "Extended Triple Diffie-Hellman."
+
+<h2>The Basic Exchange</h2>
+
+The Diffie-Hellman is a means for two parties to securely agree on a shared encryption key, assuming there is a trustworthy public server (a bulletin board in clear view of the public, for instance). The shared encryption key may then be used for further communications.
+
+<p> The idea is simple: the shared key will be 
+<div class="media">
+g^(ab) mod N, 
+</div>
+
+where g and N needn't be secure (and in some ways are better if they are public). Every number here should be sufficiently large to make brute force reversals difficult/impossible. Here, a is a secret <i>private key</i> known only to Alice, and b only to Bob. By the commutativity of multiplication, this may be computed as in any of the following three ways: 
+<div class="media">
+g^(ab) mod N = (g^a)^b mod N = (g^b)^a mod N.
+</div>
+The point is that from g^a, it is difficult to retrieve Alice's private key a, so it can be shared freely. Bob can then use it to comute the shared key.
