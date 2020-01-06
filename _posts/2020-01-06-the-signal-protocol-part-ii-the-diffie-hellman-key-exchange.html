@@ -32,7 +32,7 @@ The point is that from <b>g^a mod N</b> (known as Alice's <i>public key</i>) it 
 <li> This protocol is <i>asynchronous</i>: Bob does not need to be present for Alice to compute the shared key that she would have with him, and thus can send an initial message to Bob at any time. 
 </ul>
 
-The lack of provable protection against man-in-the-middle attacks is unacceptable however, so we address this next.
+The lack of provable protection against man-in-the-middle attacks is clearly unacceptable, but forward secrecy is also extremely desirable. Next, we try to augment Diffie-Hellman to obtain both.
 
 
 <h2>Diffie-Hellman with authentication (the Station-to-Station protocol)</h2>
