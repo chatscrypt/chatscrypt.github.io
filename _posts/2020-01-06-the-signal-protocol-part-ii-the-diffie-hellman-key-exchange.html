@@ -7,7 +7,7 @@ date: 2020-01-06
 
 Change of plan: In this post I'll discuss the Diffie-Hellman key exchange (only, rather than the all of the primitives) in increasing levels of complexity, from the original formulation to the Signal protocol's "Extended Triple Diffie-Hellman."
 
-<h2>The Basic Diffie-Hellman Key Exchange</h2>
+<h2>The basic Diffie-Hellman key exchange</h2>
 
 The Diffie-Hellman is a means for two parties to securely agree on a shared encryption key, assuming there is a trustworthy public server (a bulletin board in clear view of the public, for instance). The shared encryption key may then be used to encrypt further communications.
 
@@ -22,16 +22,19 @@ where <b>g</b> and <b>N</b> needn't be secure (and in some ways are better if pu
 </div>
 The point is that from <b>g^a mod N</b> (known as Alice's <i>public key</i>) it is difficult to retrieve Alice's private key <b>a</b>, so it can be (and is) shared freely. In particular, Bob can use it to comute the shared key. And by symmetry, Alice likewise.
 
-<p>Remarks on the weakness of this protocol:
+<p>Some remarks on security properties.
  
 <ul>
-<li>I was discussing last time the trustworthiness of the server. If it is not trustworthy (eg. the bulletin board is not in public view), then sadly we are in a Matrix-like situation: The entity controlling the board can make Alice believe anything, including that she is talking to Bob, by simply manufacturing an identity and scrawling onto the bulletin board all the things Bob would (other than "being" Bob). The only way around this is to take the red pill and contact Bob in real life.
-    
-<li> The above attack is known as a <i>man-in-the-middle</i> attack. It assumes the server is not just an eavesdropper but can tinker with messages.
+<li>I was discussing last time the trustworthiness of the server. If it is not trustworthy (eg. the bulletin board is not in public view), then sadly we are in a Matrix-like situation: The entity controlling the board can make Alice believe anything, including that she is talking to Bob, by simply manufacturing an identity and scrawling onto the bulletin board all the things Bob would (presumably hiding from Alice all the real messages Bob posts). The only guaranteed way around this is to take the red pill and contact Bob in real life. The above attack is known as a <i>man-in-the-middle</i> attack. It assumes the server is not just an eavesdropper but can tinker with messages.
+ 
+<li> A practical (non-cryptographic) property that combats a man-in-the-middle attack is to have keys with long lifetimes. Suppoose Bob posts his public key to the bulletin, but the Matrix instead shows Alice its own public key (to which it has the corresponding private key). The idea is that Alice will eventually discuss Bob's permanent or semi-permanent public key with someone (Bob or otherwise) at the watercooler, and Alice will realize the server provided her with a forged public key for Bob. The Matrix cannot risk revealing its treachery and so cannot forge Bob's public key with its own, at any time. This strategy comes at a cost: Bob's private key, if stolen, would compromise a larger proportion of Bob's past messages than if he rotated keys often. In short: Long term keys are more easily authenticated but also more vulnerable if stolen. (For later reference, this latter fact is known as a lack of <i>forward security</i>.)
+ 
+<li> This protocol is <i>asynchronous</i>: Bob does not need to be present for Alice to compute the shared key that she would have with him, and thus can send an initial message to Bob at any time. 
 </ul>
 
-To address this, we next discuss:
+The lack of provable protection against man-in-the-middle attacks is unacceptable however, so we address this next.
 
-<h2>Diffie-Hellman with Authentication: The Station-to-Station Protocol</h2>
+
+<h2>Diffie-Hellman with authentication (the Station-to-Station protocol)</h2>
 
 This is simply a way to systematize "contacting Bob in real life" discussed in the remarks above.
