@@ -25,7 +25,7 @@ Philosophically, obtaining security and stability coincide nicely, since both re
 
 <p> There are a few small design choices underlying each of the three cases above:
 
-<h2>The Contact List</h2>
+<h2>The contact list</h2>
 
 This is actually a bit controversial and subject to change, due to the question of whether it is secure to store all of a user's interactions with other users in one list. I decided to include one for now, because:
 
@@ -38,13 +38,13 @@ This is actually a bit controversial and subject to change, due to the question 
 </ul>
 
 
-  <h2>Sending Messages</h2>
+  <h2>Sending messages</h2>
 
 Uncontroversial as far as I can tell: In addition to emitting messages directly, I stage them in a message queue in memory/offline, and remove them as the server confirms successful receipt. Currently, the message queue is visually implemented via italics (the standard font is restored after a successful send).
 
 <p>Note: If a chat window is closed, its corresponding message queue is erased.
 
-  <h2>Receiving Messages</h2>
+  <h2>Receiving messages</h2>
 
 I had some design choices to make here:
 
