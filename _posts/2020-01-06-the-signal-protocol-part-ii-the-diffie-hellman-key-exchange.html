@@ -11,7 +11,7 @@ Change of plan: Instead of discussing all of the primitives used by Signal, in t
 
 The Diffie-Hellman is a means for two parties to securely agree on a shared encryption key, assuming there is a trustworthy public server (a bulletin board in clear view of the public, for instance). The shared encryption key may then be used to encrypt further communications.
 
-<p> The idea is simple: the shared key will be 
+<p> The idea is simple. The shared key will be 
 <div class="media">
  <b>g^(ab) mod N,</b> 
 </div>
@@ -59,7 +59,7 @@ Analysis:
  <li> However, both of these properties are only <i>synchronous</i>: Until Bob comes online and replies to Alice with the correct shared key encryption, Alice does not know that Bob was the one who made <b>y</b> (or rather, its public version <b>g^y mod N</b>); and of course Alice needs Bob to be online to generate new <b>y</b>'s to proceed with forward secrecy. 
 </ul>
  
-In the last section, we discuss further augmentation to obtain some asynchronous properties.
+In the last section, we discuss further augmentation to address the synchronization issues.
 
 
 
