@@ -56,7 +56,13 @@ Analysis:
   
  <li>This has forward secrecy: a new <b>x</b> and <b>y</b> may be generated for each conversation, or indeed for each message.
   
- <li> However, both of these properties are only <i>synchronous</i>: Alice does not know that Bob was the one who made <b>y</b> (or rather, its public version <b>g^y mod N</b>) until he comes online and replies with the correct shared key encryption, and of course Alice needs Bob to be online to generate new <b>y</b>'s to proceed with forward secrecy. 
+ <li> However, both of these properties are only <i>synchronous</i>: Until Bob comes online and replies to Alice with the correct shared key encryption, Alice does not know that Bob was the one who made <b>y</b> (or rather, its public version <b>g^y mod N</b>); and of course Alice needs Bob to be online to generate new <b>y</b>'s to proceed with forward secrecy. 
 </ul>
  
+In the last section, we discuss how to regain some asynchronous properties.
+
+
+
+<h2>The Extended Triple Diffie-Hellman </h2>
+
  
