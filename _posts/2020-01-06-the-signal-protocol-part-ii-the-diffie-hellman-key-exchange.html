@@ -52,8 +52,11 @@ Analysis:
 </div>
   The way to think about this perhaps is that to compute any of the three keys above, it suffices to know either variable in the exponent (eg. Alice knows, respectively, <b>a, x, x</b>).
 
- <li>Assuming long-term keys <b>a</b> and <b>b</b>, this has the improved authentication properties, discussed in the remarks of the previous section.
- <li>This has <i>synchronous</i> forward secrecy: If Alice and Bob are both online, <b>x</b> and <b>y</b> can always be readily generated before each conversation or even each message, preserving forward secrecy.
+ <li>Assuming long-term keys <b>a</b> and <b>b</b>, this has the improved authentication properties, discussed in the remarks of the previous section. Precisely: When Bob replies to Alice using all three of the above keys, and in particular the second one, she knows it must be Bob since no one has <b>x</b> (other than herself) and only Bob has <b>b</b>. 
+  
+ <li>This has forward secrecy: a new <b>x</b> and <b>y</b> may be generated for each conversation, or indeed for each message.
+  
+ <li> However, both of these properties are only <i>synchronous</i>: Alice does not know that Bob was the one who made <b>y</b> (or rather, its public version <b>g^y mod N</b>) until he comes online and replies, and of course Alice needs Bob to be online to generate new <b>y</b>'s to proceed with forward secrecy. 
 </ul>
  
  
