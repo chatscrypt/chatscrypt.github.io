@@ -6,7 +6,7 @@ date: 2020-01-06
 ---
 
 Change of plan: Instead of discussing all of the primitives used by Signal, in this post I'll discuss the <i>Diffie-Hellman key exchange</i> in increasing levels of complexity, from the original formulation to the Signal protocol's "Extended Triple Diffie-Hellman."
-
+<p>
 <h2>The basic Diffie-Hellman key exchange</h2>
 
 The Diffie-Hellman protocol is a means for two parties to securely agree on a shared encryption key, assuming there is a trustworthy public server (a bulletin board in clear view of the public, for instance). The shared encryption key may then be used to encrypt further communications.
@@ -32,7 +32,7 @@ The point is that from <b>g^a mod N</b> (known as Alice's <i>public key</i>) it 
 <li> This protocol is <i>asynchronous</i>: Bob does not need to be present for Alice to compute the shared key that she would have with him, and thus can send an initial message to Bob at any time. 
 </ul>
 
-The lack of provable protection against man-in-the-middle attacks is clearly unacceptable, but forward secrecy is also extremely desirable. Next, we augment Diffie-Hellman to obtain both.
+<p>The lack of provable protection against man-in-the-middle attacks is clearly unacceptable, but forward secrecy is also extremely desirable. Next, we augment Diffie-Hellman to obtain both.
 
 
 <h2>Diffie-Hellman with authentication (the Station-to-Station protocol)</h2>
@@ -59,7 +59,7 @@ Analysis:
  <li> However, both of these properties are only <i>synchronous</i>: Until Bob comes online and replies to Alice with the correct shared key encryption, Alice does not know that Bob was the one who made <b>y</b> (or rather, its public version <b>g^y mod N</b>); and of course Alice needs Bob to be online to generate new <b>y</b>'s to proceed with forward secrecy. 
 </ul>
  
-In the last section, we discuss further augmentation to address the synchronization issues.
+<p>In the last section, we discuss further augmentation to address the synchronization issues.
 
 
 
