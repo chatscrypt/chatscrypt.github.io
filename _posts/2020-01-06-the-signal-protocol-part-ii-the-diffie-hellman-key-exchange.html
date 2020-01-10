@@ -52,7 +52,7 @@ Analysis:
 </div>
   The way to think about this perhaps is that to compute any of the three keys above, it is necessary and sufficient to know at least one variable in the exponent (eg. Alice knows, respectively, <b>a, x, x</b>).
 
- <li>Assuming long-term keys <b>a</b> and <b>b</b>, this has the improved authentication properties, discussed in the remarks of the previous section. Precisely: When Bob replies to Alice using all three of the above keys, and in particular the second one, she knows it must be Bob since no one has <b>x</b> (other than herself) and only Bob has <b>b</b>. (In contrast, <b>y</b> is purportedly Bob's, but is new and has no historical connection with Bob; without insisting on using it alongside <b>b</b> (and all of its historical association with Bob), the server could very well have generated it, masquerading as Bob.)
+ <li>Assuming long-term keys <b>a</b> and <b>b</b>, this has the improved authentication properties, discussed in the remarks of the previous section. Precisely: When Bob replies to Alice using all three of the above keys, and in particular the second one, she knows it must be Bob since no one has <b>x</b> (other than herself) and only Bob has <b>b</b>. (In contrast, <b>y</b> is purportedly Bob's, but is new and has no historical connection with Bob; without insisting on using it alongside <b>b</b> (and all of its historical association with Bob), the server could very well have generated <b>y</b>, masquerading as Bob.)
   
  <li>This has forward secrecy: a new <b>x</b> and <b>y</b> may be generated anew for each conversation, or indeed for each message.
   
