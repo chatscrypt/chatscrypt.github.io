@@ -34,14 +34,13 @@ I'll end with a comment on an alternative (which will lead into what I intend fo
 
 <p> Let me explain this in greater depth. The Signal protocol was probably insisting on integrating three components: 
 <ul>
-<li> Repeatedly reintegrating an initial authenticated key (to avoid the overhead of repeated asymmetric cryptography, as I just discussed). This takes the form of the "root chain."
+<li> Repeatedly reintegrating an initial authenticated key.
     
 <li> KDF chains for immediate, straightforward forward secrecy.
   
 <li> Intermittent injection of random data, communicated via a Diffie-Hellman, for future secrecy.
 </ul>
 
-But "repeated E3DH" clearly replaces the second and third requirements above, and the analogous components in E3DH essentially use the same amount of resources (actually, I'm guessing KDF chains are quite fast, but on the other hand, in the DRA one ideally does <i>not</i> advance the KDF too many times without an injection with the corresponding Diffie-Hellman overhead). 
+But "repeated E3DH" clearly replaces all three requirements. For the latter two, the analogous components in E3DH essentially use the same amount of resources. (Actually, I'm guessing KDF chains are quite fast, but on the other hand, in the DRA one ideally does <i>not</i> advance the KDF too many times without an injection with the corresponding Diffie-Hellman overhead.)
 
-Thus, the main difference I can see between DRA and "repeated E3DH" is that the latter would essentially reauthenticate every message, while the former reuses an old authentication. 
-
+<p> Thus, the main difference I can see between DRA and "repeated E3DH" is that the latter would essentially reauthenticate every message, while the former reuses an old authentication. The question then is, is there a simpler way to reuse authentication in a "repeated E3DH" scheme?
