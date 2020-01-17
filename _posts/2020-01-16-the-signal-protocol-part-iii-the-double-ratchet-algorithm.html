@@ -29,6 +29,6 @@ Recall from the end of the discussion in <a href="https://chatscrypt.github.io/2
   
 <li>I did not mention this before, but there is some protection against man-in-the-middle attacks built into the DRA. All new Diffie-Hellman keys are mixed with authenticated keys from an initial E3DH. 
   
-<li>A much simpler protocol that avoids all these complications would be for Alice and Bob to each constantly maintain a Diffie-Hellman key pair and update upon receipt or sending of any message. My best guess as to why this was not used by Signal is that this would be slow (mainly the signing of the public key for authentication).
+<li>A much simpler protocol that avoids all these complications would be for Alice and Bob to each constantly maintain a Diffie-Hellman key, publish the public version, and update keys upon receipt or delivery of any message. My best guess as to why this was not used by Signal is that this would be slow (mainly the signing of the public key for authentication).
 
 </ul>
