@@ -44,3 +44,8 @@ I'll end with a comment on an alternative (which will lead into what I intend fo
 But "repeated E3DH" clearly replaces all three requirements. Further, for the latter two, the analogous components in E3DH essentially use the same amount of resources. (Actually, I'm guessing KDF chains are quite fast, but on the other hand, in the DRA one ideally does <i>not</i> advance the KDF too many times without an injection with the corresponding Diffie-Hellman overhead.)
 
 <p> Thus, the main difference I can see between DRA and "repeated E3DH" is that the latter would essentially reauthenticate every message, while the former reuses an old authentication. The question then is, is there a simpler way to reuse authentication in a "repeated E3DH" scheme?
+
+<p> Edit (1/17/2020): On second thought, naive repeated E3DH also harms <i>deniability</i>: The property that if Bob decides to publish a conversation he had with Alice, Alice can claim that Bob manufactured the entire conversation himself, and Bob has no cryptographic means of proving otherwise. With naive repeated E3DH however, Bob does have some evidence: A lot of Alice's signed public keys, that he wouldn't have if Alice hadn't at least been talking to him about something.
+  
+<p> I actually have a fair bit to say about deniability as well, but for now, we should ask if this can be somehow repaired in a repeated E3DH scheme.
+  
