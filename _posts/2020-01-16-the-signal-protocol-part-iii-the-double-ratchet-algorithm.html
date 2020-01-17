@@ -5,13 +5,13 @@ comments: true
 date: 2020-01-16
 ---
 
-Change of plans once again: I'm going to discuss the <i>Double Ratchet Algorithm</i> (DRA), the second of two components constituting the Signal protocol (the first being the Extended Triple Diffie-Hellman I discussed in my last post). Further, I won't go into detail as the full algorithm is fairly complicated, and I currently do not intend to use it. Instead, I will provide an overview, followed by some analysis.
+Change of plan once again: I'm going to discuss the <i>Double Ratchet Algorithm</i> (DRA), the second of two components constituting the Signal protocol (the first being the Extended Triple Diffie-Hellman I discussed in <a href="https://chatscrypt.github.io/2020/01/06/the-signal-protocol-part-ii-the-diffie-hellman-key-exchange">Part II</a>). Further, I won't go into detail as the full algorithm is fairly complicated, and I currently do not intend to use it. Instead, I will provide an overview, followed by some analysis.
 
 <p>
 <h2>Overview</h2>
 
 
-Recall from the end of the discussion in <a href="https://chatscrypt.github.io/2020/01/06/the-signal-protocol-part-ii-the-diffie-hellman-key-exchange">Part II</a> that there isn't an entirely satisfactory solution for asynchronous forward secrecy. E3DH loads a finite number of keys in advance, but this is unsustainable in the worst case.
+Recall from the end of the discussion in Part II that there isn't an entirely satisfactory solution for asynchronous forward secrecy. E3DH loads a finite number of keys in advance, but this is unsustainable in the worst case.
 
 <p>An alternative strategy that comes very close to success is the following: Simply hash the shared secret key and use the output as the next shared secret key; repeat this for each message. (There can be some agreed-upon offline protocol tracking how many rounds of hashing have been performed for a particular key/message pair, thus preserving asynchronicity.) The hashing destroys access to past keys; ergo, forward secrecy. This idea is essentially termed a <i>Key Derivation Function (KDF) chain</i> in the DRA.
 
