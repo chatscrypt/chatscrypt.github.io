@@ -32,7 +32,7 @@ Recall from the end of the discussion in Part II that there isn't an entirely sa
 
 I'll end with a comment on an alternative (which will lead into what I intend for Part IV). A much simpler protocol than DRA would be for Alice and Bob to each constantly maintain a Diffie-Hellman key pair, publish the public version, and update keys upon receipt or delivery of any message. Essentially, this would be repeated E3DH with some simple strategy to intermittently refresh the short-term keys. My best guess as to why this was not used by Signal is that this would be quite resource intensive. In particular, the signing of the public key for authentication uses asymmetric cryptography, which to my knowledge is slow.
 
-<p> Let me explain this in greater depth. The Signal protocol was probably insisting on integrating three components: 
+<p> Let me explain this in greater depth. The Signal protocol was probably designed by insisting on integrating three components: 
 <ul>
 <li> Repeatedly reintegrating an initial authenticated key.
     
