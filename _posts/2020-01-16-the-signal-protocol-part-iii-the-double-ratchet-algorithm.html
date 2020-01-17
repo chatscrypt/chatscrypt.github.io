@@ -26,9 +26,22 @@ Recall from the end of the discussion in Part II that there isn't an entirely sa
 
 <li>As stated in the technical specification on the Signal website, the actual DRA is even worse than this: If Alice was the last person to send a message, the next "injection" of new keys is only performed when Bob explicitly sends a message to Alice. If Bob is online but doesn't explicitly reply for whatever reason, Alice is stuck using Bob's old, potentially compromised keys. Admittedly, this could be repaired under-the-hood by notifying Alice each time Bob receives one of her messages, and treating these notifications as implicit replies. To my knowledge, it is not specified whether Signal does this. (I suspect it doesn't, as this reveals to Alice whether Bob has read her messages, and the people who made Signal don't seem like people who would appreciate this.)
 
-  
 <li>I did not mention this before, but there is some protection against man-in-the-middle attacks built into the DRA. All new shared keys are mixed with authenticated keys from an initial E3DH, and thus implicitly verified. (For those reading the literature, this arises from the "root chain" in the DRA specification, which is initialized via the E3DH.)
   
-<li>A much simpler protocol that avoids all these complications would be for Alice and Bob to each constantly maintain a Diffie-Hellman key pair, publish the public version, and update keys upon receipt or delivery of any message. My best guess as to why this was not used by Signal is that this would be quite resource intensive. In particular, the signing of the public key for authentication uses asymmetric cryptography, which to my knowledge is slow.
-
 </ul>
+
+I'll end with a comment on an alternative (which will lead into what I intend for Part IV). A much simpler protocol than DRA would be for Alice and Bob to each constantly maintain a Diffie-Hellman key pair, publish the public version, and update keys upon receipt or delivery of any message. Essentially, this would be repeated E3DH with some simple strategy to intermittently refresh the short-term keys. My best guess as to why this was not used by Signal is that this would be quite resource intensive. In particular, the signing of the public key for authentication uses asymmetric cryptography, which to my knowledge is slow.
+
+<p> Let me explain this in greater depth. The Signal protocol was probably insisting on integrating three components: 
+<ul>
+<li> Repeatedly reintegrating an initial authenticated key (to avoid the overhead of repeated asymmetric cryptography, as I just discussed). This takes the form of the "root chain."
+    
+<li> KDF chains for immediate, straightforward forward secrecy.
+  
+<li> Intermittent injection of random data, communicated via a Diffie-Hellman, for future secrecy.
+</ul>
+
+But "repeated E3DH" clearly replaces the second and third requirements above, and the analogous components in E3DH essentially use the same amount of resources (actually, I'm guessing KDF chains are quite fast, but on the other hand, in the DRA one ideally does <i>not</i> advance the KDF too many times without an injection with the corresponding Diffie-Hellman overhead). 
+
+Thus, the main difference I can see between DRA and "repeated E3DH" is that the latter would essentially reauthenticate every message, while the former reuses an old authentication. 
+
