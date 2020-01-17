@@ -15,16 +15,16 @@ Recall from the end of the discussion in <a href="https://chatscrypt.github.io/2
 
 <p>An alternative strategy that comes very close to success is the following: Simply hash the shared secret key and use the output as the next shared secret key; repeat this for each message. (There can be some agreed-upon offline protocol tracking how many rounds of hashing have been performed for a particular key/message pair, thus preserving asynchronicity.) The hashing destroys access to past keys; ergo, forward secrecy. This idea is essentially termed a <i>Key Derivation Function (KDF) chain</i> in the DRA.
 
-<p>However, this strategy loses <i>future secrecy</i>: the property that a shared secret key is eventually decomissioned <i>entirely</i>. (In practice, it is mixed with some random input so as to become essentially brand new.) A vanilla KDF chain fails this as it reuses old keys indefinitely via the hash: Once a key is stolen, the thief easily obtains future keys via the hash, just as Alice or Bob would. The goal of the Double Ratchet Algorithm is to intermittently mix in random input into a KDF chain (and to securely share this random data between Alice and Bob via some Diffie-Hellman strategy).
+<p>However, this strategy loses <i>future secrecy</i>: the property that a shared secret key is eventually decomissioned <i>entirely</i>. (In practice, it is mixed with some random input so as to become essentially brand new.) A vanilla KDF chain fails this as it reuses old keys indefinitely via the hash: Once a key is stolen, the thief easily obtains future keys via the hash, just as Alice or Bob would. The Double Ratchet Algorithm is essentially an organized way to intermittently inject new random input into a KDF chain to preserve future secrecy. (This random data is securely shared between Alice and Bob via some Diffie-Hellman scheme).
 
 <h2>Analysis</h2>
 
 <ul>
 <li> The forward secrecy is more or less impeccable, assuming a secure hash/KDF. 
 
-<li> As claimed multiple times, an entirely asynchronous future secrecy is impossible. The trouble with the DSA is that if Bob's private keys are compromised while Bob is offline for a long stretch of time, Alice has no way of communicating with Bob. She needs to wait for him to come online, and generate new keys. 
+<li> As claimed multiple times, an entirely asynchronous future secrecy is impossible. The trouble with the DSA is that if Bob's private keys are compromised while Bob is offline for a long stretch of time, Alice has no way of communicating with Bob. She needs to wait for him to come online, and "inject" new keys. 
 
-<li>As stated in the technical specification on the Signal website, the actual DSA is even worse than this: If Bob is online but doesn't explicitly reply for whatever reason, Alice is stuck using Bob's old, potentially compromised keys. Admittedly, this could be repaired under-the-hood by notifying Alice of Bob's receipt of each of her messages, and treating this notification as an implicit reply.
+<li>As stated in the technical specification on the Signal website, the actual DSA is even worse than this: If Alice was the last person to send a message, the next "injection" of new keys is only performed when Bob explicitly sends a message to Alice. If Bob is online but doesn't explicitly reply for whatever reason, Alice is stuck using Bob's old, potentially compromised keys. Admittedly, this could be repaired under-the-hood by notifying Alice of Bob's receipt of each of her messages, and treating this notification as an implicit reply.
 
 
 </ul>
