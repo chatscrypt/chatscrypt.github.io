@@ -11,7 +11,7 @@ Change of plan once again: I'm going to discuss the <i>Double Ratchet Algorithm<
 <h2>Overview</h2>
 
 
-Recall from the end of the discussion in Part II that there isn't an entirely satisfactory solution for asynchronous forward secrecy. E3DH loads a finite number of keys in advance, but this is unsustainable in the worst case.
+Recall from the end of the discussion in Part II that there isn't an entirely satisfactory solution for asynchronous forward secrecy. E3DH loads a finite number of one-use keys in advance, but this is unsustainable in the worst case.
 
 <p>An alternative strategy that comes very close to success is the following: Simply hash the shared secret key and use the output as the next shared secret key; repeat this for each message. (There can be some agreed-upon offline protocol tracking how many rounds of hashing have been performed for a particular key/message pair, thus preserving asynchronicity.) The hashing destroys access to past keys; ergo, forward secrecy. This idea is essentially termed a <i>Key Derivation Function (KDF) chain</i> in the DRA.
 
