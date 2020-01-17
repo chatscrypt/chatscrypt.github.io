@@ -24,7 +24,7 @@ Recall from the end of the discussion in <a href="https://chatscrypt.github.io/2
 
 <li> As claimed multiple times, an entirely asynchronous future secrecy is impossible. The trouble with the DSA is that if Bob's private keys are compromised while Bob is offline for a long stretch of time, Alice has no way of communicating with Bob. She needs to wait for him to come online, and "inject" new keys. 
 
-<li>As stated in the technical specification on the Signal website, the actual DSA is even worse than this: If Alice was the last person to send a message, the next "injection" of new keys is only performed when Bob explicitly sends a message to Alice. If Bob is online but doesn't explicitly reply for whatever reason, Alice is stuck using Bob's old, potentially compromised keys. Admittedly, this could be repaired under-the-hood by notifying Alice each time Bob's receives one of her messages, and treating these notifications as implicit replies. To my knowledge, it is not specified whether Signal does this.
+<li>As stated in the technical specification on the Signal website, the actual DSA is even worse than this: If Alice was the last person to send a message, the next "injection" of new keys is only performed when Bob explicitly sends a message to Alice. If Bob is online but doesn't explicitly reply for whatever reason, Alice is stuck using Bob's old, potentially compromised keys. Admittedly, this could be repaired under-the-hood by notifying Alice each time Bob receives one of her messages, and treating these notifications as implicit replies. To my knowledge, it is not specified whether Signal does this.
 
 
 </ul>
