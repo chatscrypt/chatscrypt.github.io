@@ -30,7 +30,9 @@ Recall from the end of the discussion in Part II that there isn't an entirely sa
   
 </ul>
 
-I'll end with a comment on an alternative (which will lead into what I intend for Part IV). A much simpler protocol than DRA would be for Alice and Bob to each constantly maintain a Diffie-Hellman key pair, publish the public version, and update keys upon receipt or delivery of any message. Essentially, this would be repeated E3DH with some simple strategy to intermittently refresh the short-term keys. My best guess as to why this was not used by Signal is that this would be quite resource intensive. In particular, the signing of the public key for authentication uses asymmetric cryptography, which to my knowledge is slow.
+<h2>An alternative</h2>
+
+A much simpler protocol than DRA would be for Alice and Bob to each constantly maintain a Diffie-Hellman key pair, publish the public version, and update keys upon receipt or delivery of any message. Essentially, this would be repeated E3DH with some simple strategy to intermittently refresh the short-term keys. My best guess as to why this was not used by Signal is that this would be quite resource intensive. In particular, the signing of the public key for authentication uses asymmetric cryptography, which to my knowledge is slow.
 
 <p> Let me explain this in greater depth. The Signal protocol was probably designed by insisting on integrating three components: 
 <ul>
@@ -43,7 +45,7 @@ I'll end with a comment on an alternative (which will lead into what I intend fo
 
 But "repeated E3DH" clearly replaces all three requirements. Further, for the latter two, the analogous components in E3DH essentially use the same amount of resources. (Actually, I'm guessing KDF chains are quite fast, but on the other hand, in the DRA one ideally does <i>not</i> advance the KDF too many times without an injection with the corresponding Diffie-Hellman overhead.)
 
-<p> Thus, the main difference I can see between DRA and "repeated E3DH" is that the latter would essentially reauthenticate every message, while the former reuses an old authentication. The question then is, is there a simpler way to reuse authentication in a "repeated E3DH" scheme?
+<p> Thus, the main difference I can see between DRA and "repeated E3DH" is that the latter would essentially reauthenticate every message, while the former reuses an old authentication. The question then is, is there a simpler way to reuse authentication in a "repeated E3DH" scheme? I intend to discuss this next in Part IV.
 
 <p> Edit (1/17/2020): On second thought, naive repeated E3DH also harms <i>deniability</i>, or the property that if Bob decides to publish a conversation he had with Alice, Alice can claim that Bob manufactured the entire conversation himself, and Bob has no cryptographic means of proving otherwise. With naive repeated E3DH however, Bob does have some evidence: a lot of Alice's signed public keys, that he wouldn't have if Alice hadn't at least been talking to him about something.
   
