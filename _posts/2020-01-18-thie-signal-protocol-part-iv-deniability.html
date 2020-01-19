@@ -1,0 +1,28 @@
+---
+layout: post
+title: "The Signal Protocol Part IV: Deniability"
+comments: true
+date: 2020-01-18
+---
+
+Change of plan as usual: In this post I will go on an aside and discuss <i>cryptographic deniability</i>, or the property that if Bob decides to publish a conversation he had with Alice, Alice can claim that Bob manufactured the entire conversation himself (or modified it), and Bob has no cryptographic means of proving otherwise. In brief, my current plans for ChatScrypt include cryptographic deniability, but I have my reservations.
+
+<p><h2>Arguments against cryptographic deniability</h2>
+
+<ul>
+<li> Cryptographic deniability is quite far removed from practical deniability. In real life, almost all evidence is plausibly forged, but taken as authentic anyhow. Forging a conversation (with all of the associated timestamps, cryptographic keys, etc) and inserting it into a particular chat ecosystem (eg. Signal) is just not that easy. Hence, when someone produces a conversation in their Signal app, it will probably be taken as authentic. 
+
+<li> As a result, advertising deniability as a property of a chat protocol induces a inaccurate sense of security.
+
+<li> On the other hand, the opposite of deniability, say, <i>accountability</i>, is often quite desirable. People should be accountable for making threats, hate speech, etc.
+</ul>
+
+
+<h2>Arguments for cryptographic deniability</h2>
+
+<li> Cryptographic deniability fits in with the general theme of end-to-end encryption: Philosophically, messages should "asymptotically vanish." An evesdropped encrypted message with deniability quickly becomes forever unreadable as its keys are erased, and furthermore, has better plausible deniability as time goes on (more time for the adversary to have plausibly forged it). 
+
+<li> The argument that cryptographic deniability is impractical is an argument <i>for</i> it. Essentually, the argument says the accountability wins out in the real world anyhow, and so it needs no help from security engineers: We may as well settle on the academic purity of the previous point.
+</ul>
+
+This might end my series on the Signal protocol, as I realize my next post will not be about Signal, but my plans for ChatScrypt.
