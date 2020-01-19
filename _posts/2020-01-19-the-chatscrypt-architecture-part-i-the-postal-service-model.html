@@ -1,0 +1,29 @@
+---
+layout: post
+title: "The ChatScrypt Architecture Part I: The Postal Service Model"
+comments: true
+date: 2020-01-18
+---
+
+It's easy to forget that initially, instant messaging services did not permit offline messages: You could only send an instant message to someone if they were simultaneously online. It was only fairly recently that email became a reasonably apt model for instant messaging; before then, it operated more like radio.
+
+<p>In this sense, it is not too surprising that we (or at least I) still think of an instant messaging client as a network hub, as opposed to a postal delivery service. However, given the growing interest in privacy and security in recent years, it makes sense to finally shift to the postal service model. Networks are inherently public, while postal services are inherently private.
+
+<p> Notice that I am using the word "architecture" as opposed to "protocol." A postal service has nouns, not just verbs.
+
+<h2>The model</h2>
+
+We will use the model of a postal delivery system where individuals can ask for a personal mailbox, with a mail slit accessible by the postal service. Each mailbox has a publicly known address, but a key owned only by the individual. The postal service can only push mail through the mail slits, it cannot open personal mailboxes.
+
+<p>The postal service has a central collection with a "dark dropoff area," where individuals can drop off envelopes anonymously. No return address is needed on the envelopes; of course, a recipient address is needed.
+
+<p>Individuals can check their personal mailboxes at any time. These are well-lit, so the public can see how much mail any individual is getting. Inside each envelope is a letter with the signature of the sender. Note that the sender does not necessarily have a personal mailbox. However, anyone may stop by central collection and check a public list of signatures for those with personal mailboxes. Letters with unregistered or fake signatures may be discarded.
+
+
+<h2>The implementation</h2>
+
+I should first point out that this is at the moment mostly theoretical. For instance, the practical separation between a user as a recipient and a user as a senter is essentially destroyed by IP tracking, browser metadata, etc. Further, none of the below is implemented yet, but I'm going to use present tense in describing my plans.
+
+<p>Currently, ChatScrypt runs using web sockets. When Alice connects to ChatScrypt, a "recipient socket" will initiate and request authentication. Once authenticated, the server will send encrypted messages and signatures to the client, along with a password-encrypted bundle of Alice's identity and short term keys (I will discuss the details of the encryption in Part II). Alice may use these to make sense of the messages and signatures. The signatures may be validated using a public database of public identity keys.
+
+<p>When Alice decides to send a message, a "sender socket" will initiate, without requesting authentication. Alice will need to fetch public keys of individuals to whom she would like to send messages, and use these with her private keys to encrypt her messages and signatures.
