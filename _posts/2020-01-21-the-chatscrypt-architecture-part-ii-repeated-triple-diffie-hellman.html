@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "The ChatScrypt Architecture Part II: Repeated Triple Diffie-Hellman"
+title: "The ChatScrypt Architecture Part II: Repeated Double Diffie-Hellman"
 comments: true
 date: 2020-01-21
 ---
@@ -13,19 +13,36 @@ As I hinted at in my discussion of the Signal protocol, there are two things I d
 <li> The Double Ratchet seems unnecessarily complicated, insisting on a KDF chain when a single Diffie-Hellman (DH) sequence would suffice, and in fact improve future secrecy.
 </ul>
 
-<p> My idea is to simplify the scheme into a Repeated Triple Diffie-Hellman (R3DH) scheme, as follows:
+<p> My idea is to simplify the scheme into a Repeated Double Diffie-Hellman (R2DH) scheme, as follows:
 
-<h2> The initialization</h2>
+<h2> Initializing the Double Diffie-Hellman</h2>
 
-Straightforward: This would be identical to the E3DH, except without using the optional one-time keys. Instead, Bob's posted short-term public key will refresh every time a new chat is initiated with him, if he is logged in.
+This would be similar to the E3DH, with the following differences:
 
-<p> I do want to point out however that Signal appears to be contact-based, with infinite scroll. For ChatScrypt, the initialization procedure would repeat for each new chat.
+<ul>
+  
+ <li>No optional one-time keys. Instead, Bob's posted short-term public key will refresh every time a new chat is initiated with him, if he is logged in.
+   
+ <li>If Alice is messaging Bob, her encryption key will be (see <a href="https://chatscrypt.github.io/2020/01/06/the-signal-protocol-part-ii-the-diffie-hellman-key-exchange">Part II</a> of my discussion on the Signal protocol for notation)
+<div class="media">
+ <b>g^(ay) mod N</b> and <b>g^(xy) mod N</b>
+</div>
+   
+ </ul>
 
-<h2> Repeated Triple Diffie-Hellman </h2>
+<p> A remark: Signal appears to be contact-based, with infinite scroll, so initialization rarely happens. For ChatScrypt, the initialization procedure would repeat for each new chat.
 
-Alice will encrypt each of her successive messages with a new random short-term DH key pair (and Bob, likewise), concatenated as in E3DH with her long-term key. She will attach the corresponding public key to each message so Bob can use it for decryption. As Bob will have provided her multiple public keys, she will use the most recent one. As a result, Alice needs to store at most one of Bob's public keys at any time.
+<h2> Repeated Double Diffie-Hellman </h2>
 
-<p>When Bob receives a message from Alice, there is some ambiguity as to which of his private keys he should use to decrypt it. As a result, in her message, Alice also needs to include which of Bob's public keys she used. In her (encrypted) message, she also includes an integer specifying the number of this particular message. This way, Bob can determine if he is up to date with all of Alice's messages so far. If so, he can delete all but his most recent DH key pair.
+Alice will encrypt each of her successive messages with a new random short-term DH key <b>x</b>, concatenated in the above sense with her long-term key. She will attach the following to her message:
+
+<ul>
+  <li> The corresponding public key to so Bob can use it for decryption. 
+   <li> She will also include which of Bob's public keys she used. As Bob will have provided her multiple short-term public keys <b>g^y mod N</b>, she will use the most recent one. As a result, Alice needs to store at most one of Bob's public keys at any time. 
+<li>In her (encrypted) message, she also includes an integer specifying the number of this particular message. 
+  </ul>
+
+<p>When Bob receives a message from Alice, there is no ambiguity as to which of his private keys he should use to decrypt it. After decrypting it, he sees the number of this message, and can determine if he is up to date with all of Alice's messages so far. If so, he can delete all but his most recent DH key pair.
   
  <p>If Bob sends a lot of messages before Alice replies, this is a lot of key pairs to store. However, assuming no lost messages or delays, Bob really needs only to store his most recent key pair. As a result, it is reasonable for Bob to store at most, say 16 key pairs.
    
