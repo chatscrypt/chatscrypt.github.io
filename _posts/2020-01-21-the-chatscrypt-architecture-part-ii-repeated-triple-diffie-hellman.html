@@ -62,12 +62,13 @@ I am worried about this protocol because - to entirely put aside any humility - 
   
   <li>Why double instead of triple? Of course, this would cut overhead by a third. But is it as secure? Recall that two of three DH shared keys in E3DH are there mostly for authentication. As shared keys are never used more than once in this protocol, and in particular are one-way, there is only a need for one of the two authenticating shared keys. There is some lost security: For instance, stealing Bob's <b>y</b> alone would crack the example shared key above; in the triple version, <b>x</b> or <b>b</b> would need to be stolen as well. However, chances are, if <b>y</b> is stolen, <b>b</b> is as well, as they are both stored by Bob. (Of course, R2DH is easily extended to R3DH if someone convinces me of a good reason to do so.)
   
-<li>The Signal protocol doesn't directly use long-term keys <b>a</b> and <b>b</b> for authentication in the double ratchet. Instead, it uses a successive DH-seeded hash of an E3DH-authenticated shared key. Since the authentication key is constantly refreshing, this makes man-in-the-middle attacks harder. (For R2DH, an attacker can slowly and passively cryptanalyze his/her way into <b>a</b> or <b>b</b>; rapidly refreshed authentication keys are too ephemeral for this.) On the other hand, this feature is a major reason why the Double Ratchet Algorithm is complicated by KDF chains: Alice can't be creating lots of new DH keys (which double as authentication seeds) without Bob acknowledging each one, since Bob cannot make sense of messages that are out of order. In the next installment, Part III, I will try to make the best of both worlds.
+<li>The Signal protocol doesn't directly use long-term keys <b>a</b> and <b>b</b> for authentication in the double ratchet. Instead, it uses a successive DH-seeded hash of an E3DH-authenticated shared key. Since the authentication key is constantly refreshing, this makes man-in-the-middle attacks harder. (For R2DH, an attacker can slowly and passively cryptanalyze his/her way into <b>a</b> or <b>b</b>; rapidly refreshed authentication keys are too ephemeral for this.) On the other hand, this feature is a major reason why the Double Ratchet Algorithm is complicated by KDF chains: Alice can't be creating lots of new DH keys (which double as authentication seeds) without Bob acknowledging each one, since Bob cannot make sense of messages that are out of order. A KDF chain is the next best thing.
     
 </ul>
 
+In the next installment, Part III, I will try to make the best of both worlds for this last weakness.
 
-On the other hand, there are some relative strengths:
+<p>On the other hand, there are some relative strengths:
 <ul>
 <li> Bob updates his initialization short-term key more regularly.
   
