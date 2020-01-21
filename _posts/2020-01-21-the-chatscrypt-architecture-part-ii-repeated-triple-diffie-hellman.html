@@ -39,7 +39,7 @@ Alice will encrypt each of her successive messages with a new random short-term 
 <ul>
   <li> The corresponding public key for <b>x</b> so Bob can use it for decryption. 
    <li> She will also include which of Bob's public keys she used. As Bob will have provided her multiple short-term public keys <b>g^y mod N</b>, she will use the most recent one. As a result, Alice needs to store at most one of Bob's public keys at any time. 
-<li>In her (encrypted) message, she also includes an integer specifying the number of this particular message, in the list of messages she has sent.
+<li>In her (encrypted) message, she also includes an integer specifying the number of this particular message, in the list of messages she has sent. This serves the two-fold purpose of being information, as well as a recognizably non-random string in the decrypted message (the latter is useful for authentication).
   </ul>
 
 <p>When Bob receives a message from Alice, there is no ambiguity as to which of his private keys he should use to decrypt it. After decrypting it, he sees the number of the message, and can determine if he is up to date with all of Alice's messages so far. If so, he can delete all but his most recent DH key pair.
