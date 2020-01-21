@@ -23,7 +23,7 @@ Straightforward: This would be identical to the E3DH, except without using the o
 
 <h2> Repeated Diffie-Hellman </h2>
 
-Recall that the initial DH requires Bob's posted short term public key to have an attached signature for asynchronous authentication. In contrast, Alice's short-term public key is automatically verified as if she sends the initial message, she encrypts it using her public key "concatenated" in the appropriate sense with her authenticated long-term key. Accordingly, after the first message sent by Alice, no signatures are needed: All keys are automatically authenticated by "concatenation" with authenticated long-term keys.
+Recall that the initial DH requires Bob's posted short term public key to have an attached signature for asynchronous authentication. In contrast, Alice's short-term public key is automatically verified since she sends the initial message, encrypting it using her public key "concatenated" in the appropriate sense with her authenticated long-term key. Accordingly, after the first message sent by Alice, no signatures are needed: All keys are automatically authenticated by "concatenation" with authenticated long-term keys.
 
 <p>Alice will encrypt each of her messages with a new short-term DH key pair (and Bob, likewise), concatenated as in E3DH with her long-term key. She will attach the corresponding public key to each message so Bob can use it for decryption. As Bob will have provided her multiple public keys, she will use the most recent one. As a result, Alice needs to store at most one of Bob's public keys at any time.
 
