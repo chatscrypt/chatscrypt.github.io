@@ -31,7 +31,7 @@ Recall that the initial DH requires Bob's posted short term public key to have a
 
 <h2>Analysis</h2>
 
-I am worried about this protocol because - to entirely put aside any humility - it is too good. It is vastly simpler than Signal's Double Ratchet Algorithm, and seems to be strictly more secure. It has identical deniability properties, as no signatures are used except at the outset, just as in the Signal protocol.
+I am worried about this protocol because - to entirely put aside any humility - it is too good. It is vastly simpler than Signal's Double Ratchet Algorithm, and seems to be strictly more secure. It has identical deniability properties, as no signatures are used except at the outset, just as in the Signal protocol. Combined with the "Postal Delivery Model" of Part I, the ChatScrypt server can only possibly collect data about how much mail each user receives, with timestamps. It can know nothing about whom is talking to whom, or even when a new contact is initiated.
 
 <p>Let me list the relative weaknesses I can think of right now:
 <ul>
