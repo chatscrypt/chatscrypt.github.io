@@ -55,7 +55,7 @@ I am worried about this protocol because - to entirely put aside any humility - 
 <p>Let me list the relative weaknesses I can think of right now, in increasing order of severity:
 <ul>
     
-<li> At initialization, I only have one short-term key, as opposed to multiple for E3DH. This compromises security in the very mild sense that if multiple people initiate chats with Bob while he is offline, they will all use the same public keys to build their shared DH encryption keys with Bob. They of course will use different private keys however, and so forward/future secrecy is preserved aside from the case of catastrophic RNG failure on Alice's side. (This is why multiple short-term keys was optional in E3DH to begin with.)
+<li> At initialization, I only have one short-term key, as opposed to multiple for E3DH. This compromises security in the very mild sense that if multiple people initiate chats with Bob while he is offline, they will all use the same public keys to build their shared DH encryption keys with Bob. They of course will use different private keys however, and so forward/future secrecy is preserved aside from the case of catastrophic RNG failure on Alice's side. (This is why multiple short-term keys was optional in E3DH to begin with. Of course, if someone convinces me of their value, this feature is easily added.)
   
 <li>I suspect KDF chains are faster, with smaller state, than having multiple DH pairs. But DH is pretty quick already, and as I pointed out last time, the Double Ratchet Algorithm actually should prefer that the DH-less KDF not run too long, as this damages future secrecy.
   
