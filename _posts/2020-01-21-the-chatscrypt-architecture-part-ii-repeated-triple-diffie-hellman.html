@@ -42,7 +42,7 @@ Alice will encrypt each of her successive messages with a new random short-term 
 <li>In her (encrypted) message, she also includes an integer specifying the number of this particular message, ie. its position in the list of messages she has sent. This serves the two-fold purpose of being useful information for Bob, but also as a recognizably non-random string in the decrypted message (the latter is useful for authentication).
   </ul>
 
-<p>When Bob receives a message from Alice, there is no ambiguity as to which of his private keys he should use to decrypt it. After decrypting it, he sees the number of the message, and can determine if he is up to date with all of Alice's messages so far. If so, he can delete all but his most recent DH key pair.
+<p>When Bob receives a message from Alice, there is no ambiguity as to which of his private keys he should use to decrypt it. After decrypting it, he sees the number of the message, and can determine if he is up to date with all of Alice's messages so far. If so, he can delete all of his short-term key pairs up to the one Alice just used.
   
  <p>If Bob sends a lot of messages before Alice replies, this is a lot of key pairs to store. However, assuming no lost messages or delays, Bob really needs only to store his most recent key pair. As a result, it is reasonable for Bob to store at most, say 16 key pairs.
    
