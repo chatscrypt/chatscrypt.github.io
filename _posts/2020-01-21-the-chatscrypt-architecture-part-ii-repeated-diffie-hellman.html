@@ -21,7 +21,7 @@ Straightforward: This would be identical to the E3DH, except without using the o
 
 <p> I do want to point out however that Signal appears to be contact-based, with infinite scroll. For ChatScrypt, the initialization procedure would repeat for each new chat.
 
-<h2> Repeated Diffie-Hellman <h2>
+<h2> Repeated Diffie-Hellman </h2>
 
 Recall that the initial DH requires Bob's posted short term public key to have an attached signature for asynchronous authentication. In contrast, Alice's short-term public key is automatically verified as if she sends the initial message, she encrypts it using her public key "concatenated" in some sense with her authenticated long-term key. Similarly, after the first message sent by Alice, no signatures are needed: all keys are automatically authenticated by "concatenation" with authenticated long-term keys.
 
@@ -29,7 +29,7 @@ Recall that the initial DH requires Bob's posted short term public key to have a
 
 <p>When Bob receives a message from Alice, there is some ambiguity as to which of his private keys he should use to decrypt it. As a result, in her message, Alice also needs to include Bob's public key. In her (encrypted) message, she also includes an integer specifying the number of this particular message. This way, Bob can determine if he is up to date with all of Alice's messages so far. If so, he can delete all but his most recent DH key pair.
 
-<h2>Remarks</h2>
+<h2>Analysis</h2>
 
 I am worried about this protocol because - to entirely put aside any humility - it is too good. It is vastly simpler than Signal's Double Ratchet Algorithm, and is seems to be strictly more secure. It has identical deniability properties, as no signatures are used except at the outset, just as in the Signal protocol.
 
