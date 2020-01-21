@@ -45,7 +45,7 @@ Advantages:
 <ul>
 <li> Bob updates his posted short-term key more regularly.
 
-<li> As already pointed out, for brief spurts in the Double Ratchet Algorithm, the KDF chains did not have satisfactory future secrecy. There is in principle an unbounded period of time with no future secrecy in fact, if Bob refuses to reply to Alice. With repeated DH however, there is at least a weak future secrecy established on Alice's side due to the use of a fresh private key for every single message.
+<li> As already pointed out, for brief spurts in the Double Ratchet Algorithm, the KDF chains did not have satisfactory future secrecy. In fact, there is in principle an unbounded period of time with no future secrecy, if Bob refuses to reply to Alice. With repeated DH however, there is at least a weak future secrecy established on Alice's side due to the use of a fresh private key for every single message.
   
 <li>Minor, but here we easily keep the message number encrypted. The Signal protocol has a fairly complicated (though more secure) header encryption scheme that to my mind is mostly unnecessary.
 </ul>
