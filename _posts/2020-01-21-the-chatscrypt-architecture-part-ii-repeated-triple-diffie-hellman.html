@@ -41,7 +41,7 @@ And that's pretty much it! Of course, she will attach the following to her messa
   
 <h2> Initialization</h2>
 
-This would be the same as the usual R2DH step, except she would receive the public counterpart to <b>y</b> not from one of Bob's messages, but from the server. As a result, it needs to be digitally signed. Bob's signed <b>y</b> will refresh every time a new chat is initiated with him, if he is logged in. This is similar to the E3DH, but with systematic signed-key refresh instead of the optional one-time keys. 
+This would be the same as the usual R2DH step, except Alice would receive the public counterpart to <b>y</b> not from one of Bob's messages, but from the server. As a result, it needs to be digitally signed. Bob's signed <b>y</b> will refresh every time a new chat is initiated with him, if he is logged in. This is similar to the E3DH, but with systematic signed-key refresh instead of the optional one-time keys. 
 
 <p> A remark: Signal appears to be contact-based, with infinite scroll, so initialization rarely happens. For ChatScrypt, the initialization procedure would repeat for each new chat, so refreshing the signed <b>y</b> would not be a rare event. (And if it is, then it's not often used in any case.)
 
