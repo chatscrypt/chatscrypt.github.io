@@ -27,7 +27,7 @@ Recall that the initial DH requires Bob's posted short term public key to have a
 
 <p>Alice will encrypt each of her messages with a new short-term DH key pair (and Bob, likewise), concatenated as in E3DH with her long-term key. She will attach the corresponding public key to each message so Bob can use it for decryption. As Bob will have provided her multiple public keys, she will use the most recent one. As a result, Alice needs to store at most one of Bob's public keys at any time.
 
-<p>When Bob receives a message from Alice, there is some ambiguity as to which of his private keys he should use to decrypt it. As a result, in her message, Alice also needs to include Bob's public key. In her (encrypted) message, she also includes an integer specifying the number of this particular message. This way, Bob can determine if he is up to date with all of Alice's messages so far. If so, he can delete all but his most recent DH key pair.
+<p>When Bob receives a message from Alice, there is some ambiguity as to which of his private keys he should use to decrypt it. As a result, in her message, Alice also needs to include which of Bob's public keys she used. In her (encrypted) message, she also includes an integer specifying the number of this particular message. This way, Bob can determine if he is up to date with all of Alice's messages so far. If so, he can delete all but his most recent DH key pair.
 
 <h2>Analysis</h2>
 
