@@ -1,0 +1,49 @@
+---
+layout: post
+title: "The ChatScrypt Architecture Part II: Repeated Diffie-Hellman"
+comments: true
+date: 2020-01-21
+---
+
+As I hinted at in my discussion of the Signal protocol, there are two things I did not like:
+
+<ul>
+<li> The one-time key idea used in the E3DH. This is too gimmicky for me.
+
+<li> The Double Ratchet seems unnecessarily complicated, insisting on a KDF chain when a single DH type sequence would suffice, and in fact improve future secrecy.
+</ul>
+
+<p> My idea is to simplify the scheme into a repeated Diffie-Hellman, as follows:
+
+<h2> The initialization</h2>
+
+Straightforward: This would be identical to the E3DH, except without using the optional one-time keys. Instead, Bob's posted short-term public key will refresh every time a new chat is initiated with him, if he is logged in.
+
+<p> I do want to point out however that Signal appears to be contact-based, with infinite scroll. For ChatScrypt, the initialization procedure would repeat for each new chat.
+
+<h2> Repeated Diffie-Hellman <h2>
+
+Recall that the initial Diffie-Hellman requires Bob's posted short term public key to have an attached signature for asynchronous authentication. In contrast, Alice's short-term public key is automatically verified as if she sends the initial message, she encrypts it using her public key "concatenated" in some sense with her authenticated long-term key. Similarly, after the first message sent by Alice, no signatures are needed: all keys are automatically authenticated by "concatenation" with authenticated long-term keys.
+
+<p>Alice will encrypt each of her messages with a new short-term Diffie-Hellman key pair (and Bob, likewise), concatenated as in E3DH with her long-term key. She will attach the corresponding public key to each message so Bob can use it for decryption. As Bob will have provided her multiple public keys, she will use the most recent one. As a result, Alice needs to store at most one of Bob's public keys at any time.
+
+<p>When Bob receives a message from Alice, there is some ambiguity as to which of his private keys he should use to decrypt it. As a result, in her message, Alice also needs to include Bob's public key. In her (encrypted) message, she also includes an integer specifying the number of this particular message. This way, Bob can determine if he is up to date with all of Alice's messages so far. If so, he can delete all but his most recent Diffie-Hellman key pair.
+
+<h2>Remarks</h2>
+
+I am worried about this protocol because - to entirely put aside any humility - it is too good. It is vastly simpler than Signal's Double Ratchet Algorithm, and is seems to be strictly more secure. It has identical deniability properties, as no signatures are used except at the outset, just as in the Signal protocol.
+
+<p>Let me list the relative weaknesses I can think of right now:
+<ul>
+<li> Of course, at initialization, I only have one short-term key, as opposed to multiple for E3DH. This compromises security in the very mild sense that if multiple people initiate chats with Bob while he is offline, they will all use the same public keys to build their shared Diffie-Hellman encryption keys with Bob. They of course will use different private keys however, and so forward/future secrecy is preserved aside from the case of catastrophic RNG failure on Alice's side. (This is why multiple short-term keys was optional in E3DH to begin with.)
+
+<li>I suspect KDF chains are faster than Diffie-Hellman. But Diffie-Hellman is pretty quick already, and as I pointed out last time, the Double Ratchet Algorithm actually should prefer the KDF with no Diffie-Hellman does not run too long, as this damages future secrecy.
+</ul>
+
+
+Advantages:
+<ul>
+<li> Bob updates his posted short-term key more regularly.
+
+<li> As already pointed out, for brief spurts in the Double Ratchet Algorithm, the KDF chains did not have satisfactory future secrecy. There is in principle an unbounded period of time with no future secrecy in fact, if Bob refuses to reply to Alice. With repeated Diffie-Hellman however, there is at least a weak future secrecy established on Alice's side due to the use of a fresh private key for every single message.
+</ul>
