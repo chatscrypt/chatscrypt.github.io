@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "The ChatScrypt Architecture Part II: Repeated Diffie-Hellman"
+title: "The ChatScrypt Architecture Part II: Repeated Triple Diffie-Hellman"
 comments: true
 date: 2020-01-21
 ---
@@ -13,7 +13,7 @@ As I hinted at in my discussion of the Signal protocol, there are two things I d
 <li> The Double Ratchet seems unnecessarily complicated, insisting on a KDF chain when a single Diffie-Hellman (DH) sequence would suffice, and in fact improve future secrecy.
 </ul>
 
-<p> My idea is to simplify the scheme into a repeated Diffie-Hellman (RDH) scheme, as follows:
+<p> My idea is to simplify the scheme into a Repeated Triple Diffie-Hellman (R3DH) scheme, as follows:
 
 <h2> The initialization</h2>
 
@@ -21,7 +21,7 @@ Straightforward: This would be identical to the E3DH, except without using the o
 
 <p> I do want to point out however that Signal appears to be contact-based, with infinite scroll. For ChatScrypt, the initialization procedure would repeat for each new chat.
 
-<h2> Repeated Diffie-Hellman </h2>
+<h2> Repeated Triple Diffie-Hellman </h2>
 
 Alice will encrypt each of her successive messages with a new random short-term DH key pair (and Bob, likewise), concatenated as in E3DH with her long-term key. She will attach the corresponding public key to each message so Bob can use it for decryption. As Bob will have provided her multiple public keys, she will use the most recent one. As a result, Alice needs to store at most one of Bob's public keys at any time.
 
