@@ -53,21 +53,25 @@ Alice will encrypt each of her successive messages with a new random short-term 
 
 I am worried about this protocol because - to entirely put aside any humility - it is too good. It is vastly simpler than Signal's Double Ratchet Algorithm, and seems to be strictly more secure. It has identical deniability properties, as no signatures are used except at the outset, just as in the Signal protocol. Combined with the "Postal Delivery Model" of Part I, the ChatScrypt server can only possibly collect data about how much mail each user receives, with timestamps. It can know nothing about whom is talking to whom, or even when a new contact is initiated.
 
-<p>Let me list the relative weaknesses I can think of right now:
+<p>Let me list the relative weaknesses I can think of right now, in increasing order of severity:
 <ul>
-  <li>Elephant in the room: Why double instead of triple? This would obviously cut overhead by a third. But is it as secure? Recall that two of three DH shared keys are used mostly for authentication. As shared keys are never used more than once in this protocol, and in particular are one-way, there is only a need for one of the two authenticating shared keys. There is some lost security: For instance, stealing Bob's <b>y</b> alone would crack the example shared key above; in the triple version, <b>x</b> or <b>b</b> would need to be stolen as well. However, chances are, if <b>y</b> is stolen, <b>b</b> is as well. 
     
-<li> Of course, at initialization, I only have one short-term key, as opposed to multiple for E3DH. This compromises security in the very mild sense that if multiple people initiate chats with Bob while he is offline, they will all use the same public keys to build their shared DH encryption keys with Bob. They of course will use different private keys however, and so forward/future secrecy is preserved aside from the case of catastrophic RNG failure on Alice's side. (This is why multiple short-term keys was optional in E3DH to begin with.)
-
-<li>I suspect KDF chains are faster than DH. But DH is pretty quick already, and as I pointed out last time, the Double Ratchet Algorithm actually should prefer that the DH-less KDF not run too long, as this damages future secrecy.
+<li> At initialization, I only have one short-term key, as opposed to multiple for E3DH. This compromises security in the very mild sense that if multiple people initiate chats with Bob while he is offline, they will all use the same public keys to build their shared DH encryption keys with Bob. They of course will use different private keys however, and so forward/future secrecy is preserved aside from the case of catastrophic RNG failure on Alice's side. (This is why multiple short-term keys was optional in E3DH to begin with.)
+  
+<li>I suspect KDF chains are faster, with smaller state, than having multiple DH pairs. But DH is pretty quick already, and as I pointed out last time, the Double Ratchet Algorithm actually should prefer that the DH-less KDF not run too long, as this damages future secrecy.
+  
+  <li>Why double instead of triple? Of course, this would cut overhead by a third. But is it as secure? Recall that two of three DH shared keys in E3DH are there mostly for authentication. As shared keys are never used more than once in this protocol, and in particular are one-way, there is only a need for one of the two authenticating shared keys. There is some lost security: For instance, stealing Bob's <b>y</b> alone would crack the example shared key above; in the triple version, <b>x</b> or <b>b</b> would need to be stolen as well. However, chances are, if <b>y</b> is stolen, <b>b</b> is as well, as they are both stored by Bob. (Of course, R2DH is easily extended to R3DH if someone convinces me of a good reason to do so.)
+  
+<li>The Signal protocol doesn't directly use long-term keys <b>a</b> and <b>b</b> for authentication in the double ratchet. Instead, it uses a successive DH-seeded hash of an E3DH-authenticated shared key. Since the authentication key is constantly refreshing, this makes man-in-the-middle attacks harder. (For R2DH, an attacker can slowly and passively cryptanalyze his/her way into <b>a</b> or <b>b</b>; rapidly refreshed authentication keys are too ephemeral for this.) On the other hand, this feature is a major reason why the Double Ratchet Algorithm is complicated by KDF chains: Alice can't be creating lots of new DH keys (which double as authentication seeds) without Bob acknowledging each one, since Bob cannot make sense of messages that are out of order. In the next installment, Part III, I will try to make the best of both worlds.
+    
 </ul>
 
 
 On the other hand, there are some relative strengths:
 <ul>
-<li> Bob updates his posted short-term key more regularly.
-
-<li> As already pointed out, for brief spurts in the Double Ratchet Algorithm, the KDF chains did not have satisfactory future secrecy. In fact, there is in principle an unbounded period of time with no future secrecy, if Bob refuses to reply to Alice. With R3DH however, there is at least a weak future secrecy established on Alice's side due to the use of a fresh private key for every single message.
+<li> Bob updates his initialization short-term key more regularly.
   
-<li>Minor, but here we easily keep the message number encrypted. The Signal protocol has a fairly complicated (though more secure) header encryption scheme that to my mind is mostly unnecessary.
+<li> Here we easily keep the message number encrypted. The Signal protocol has a fairly complicated (though more secure) header encryption scheme that to my mind is mostly unnecessary.
+
+<li> As already pointed out, for brief spurts in the Double Ratchet Algorithm, the KDF chains did not have satisfactory future secrecy. However, there is in principle an unbounded period of time with no future secrecy, if Bob refuses to reply to Alice. With R2DH, there is at least a weak future secrecy established on Alice's side due to the use of a fresh private key for every single message.
 </ul>
