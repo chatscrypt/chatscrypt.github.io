@@ -36,7 +36,7 @@ And that's pretty much it! Of course, she will attach the following to her messa
   
  <p>If Bob sends a lot of messages before Alice replies, this is a lot of key pairs to store. However, assuming no lost messages or delays, Bob really needs only to store his most recent key pair. As a result, it is reasonable for Bob to store at most, say 16 key pairs.
    
-<p> Regarding authentication, and protection against man-in-the-middle attacks: Recall that the initial DH requires Bob's posted short term public key to have an attached signature for asynchronous authentication. In contrast, Alice's short-term public key is verified as it is concatenated in the above sense with her authenticated long-term key (and the resulting shared key is tested by decrypting the message number). Similarly, all future keys are deniably authenticated by concatenation with authenticated long-term keys; no signatures needed.
+<p> Regarding authentication, and protection against man-in-the-middle attacks: Alice's short-term public key <b>x</b> is verified as it is concatenated in the above sense with her authenticated long-term key (and the resulting shared key is tested by using it to decrypt the message number, informing Bob that Alice was able to build the same key). No signature is needed, so this allows cryptographic deniability.
 
   
 <h2> Initialization</h2>
