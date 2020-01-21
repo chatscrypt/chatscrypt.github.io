@@ -20,7 +20,7 @@ As I hinted at in my discussion of the Signal protocol, there are two things I d
   
 <h2> Repeated Double Diffie-Hellman </h2>
 
-For each of her successive messages, Alice will use an encryption key consisting of a fresh, random short-term DH key <b>x</b>, concatenated with her long-term key <b>a</b>, in the following sense:
+For each of her successive messages, Alice will use an encryption key consisting of a fresh, random short-term DH key <b>x</b>, her long-term key <b>a</b>, and the public version of Bob's most recent short-term public key <b>y</b>. Precisely, the encryption key will be
 <div class="media">
  <b>g^(ay) mod N</b> and <b>g^(xy) mod N</b>.
 </div>
