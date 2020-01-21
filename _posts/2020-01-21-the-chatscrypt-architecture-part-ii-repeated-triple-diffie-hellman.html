@@ -27,7 +27,7 @@ For each of her successive messages, Alice will use an encryption key consisting
 She will attach the following to her message:
 
 <ul>
-  <li> The corresponding public key for <b>x</b> so Bob can use it for decryption. 
+  <li> The corresponding public key for <b>x</b> so Bob can build the shared key. 
    <li> She will also include which of Bob's public keys she used. As Bob will have provided her multiple short-term public keys <b>g^y mod N</b>, she will use the most recent one. As a result, Alice needs to store at most one of Bob's public keys at any time. 
 <li>In her (encrypted) message, she also includes an integer specifying the number of this particular message, ie. its position in the list of messages she has sent. This serves the two-fold purpose of being useful information for Bob, but also as a recognizably non-random string in the decrypted message (the latter is useful for authentication).
   </ul>
