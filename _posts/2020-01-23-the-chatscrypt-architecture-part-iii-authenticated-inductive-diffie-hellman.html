@@ -78,6 +78,6 @@ For authentication, Bob searches for <b>x'</b> in his list of Alice's public key
 
 <ul>
 <li>He pushes the message number to his list of integers. If the list is contiguous from the beginning, he can empty the list.
-<li>If the messages were contiguous, Bob may delete all of his private keys (strictly) before <b>y</b>. (Alice has used it, and from now all incoming messages will use it or a newer key.)
+<li>If the messages were contiguous, Bob may delete all of his private keys (strictly) before <b>y</b>. (Alice has seen it, so from now all of her messages will use <b>y</b> or a newer key.)
 <li>Bob pushes the new key <b>g^x mod N</b> into his list of Alice's public keys. If the messages were contiguous, he may delete all of Alice's public keys (strictly) before <b>x'</b>.
 </ul>
