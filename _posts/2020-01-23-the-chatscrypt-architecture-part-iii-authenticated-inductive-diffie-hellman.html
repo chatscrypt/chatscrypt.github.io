@@ -48,11 +48,11 @@ Alice then initalizes her state:
 <li>Bob's public key list is initialized with <b>g^y mod N</b>.
 </ul>
 
-If roles are reversed and Alice receives the first message, she intializes as follows: 
+When Bob receives the first message, he intializes as follows: 
 <ul>
-<li>She creates a list of integers initialized with 1.
-<li>Alice's private key list is initialized with her published server key <b>x</b>.
-<li>Bob's public key list is initialized with <b>g^b mod N</b>.
+<li>He creates a list of integers initialized with 1.
+<li>Bob's private key list is initialized with <b>y</b>.
+<li>Alice's public key list is initialized with <b>g^a mod N</b>.
 </ul>
 
 <h2>Sending a message</h2>
@@ -74,10 +74,10 @@ She attaches the following to her message:
 
 <h2> Receiving a message</h2>
 
-The attached public keys in this case are <b>g^y, g^y', g^x mod N</b>. For authentication, she searches for <b>y'</b> in her list of Bob's public keys. She searches for <b>x</b> in her list of private keys. She decrypts the message and updates her state as follows if the message number and timestamp are sensible:
+For authentication, Bob searches for <b>x'</b> in his list of Alice's public keys. He searches for <b>y</b> in his list of private keys. He decrypts the message and updates his state as follows if the message number and timestamp are sensible:
 
 <ul>
-<li>She pushes the message number to her list of integers. If the list is contiguous from the beginning, she can empty the list.
-<li>If the messages were contiguous, Alice may delete all of her private keys (strictly) before <b>x</b>. (Bob has used it, and from now on he will only use it or a newer key.)
-<li>Alice pushes the new key <b>g^y mod N</b>. If the messages were contiguous, she may delete all of Bob's public keys (strictly) before <b>y'</b>.
+<li>He pushes the message number to his list of integers. If the list is contiguous from the beginning, he can empty the list.
+<li>If the messages were contiguous, Bob may delete all of his private keys (strictly) before <b>y</b>. (Alice has used it, and from now all incoming messages will use it or a newer key.)
+<li>Bob pushes the new key <b>g^x mod N</b> into his list of Alice's public keys. If the messages were contiguous, he may delete all of Alice's public keys (strictly) before <b>x'</b>.
 </ul>
