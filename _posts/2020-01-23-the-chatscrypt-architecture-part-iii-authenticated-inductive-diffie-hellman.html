@@ -5,7 +5,7 @@ comments: true
 date: 2020-01-20
 ---
 
-I came up with the Authenticated Inductive Diffie-Hellman (AIDH) protocol as I finished up <a href="https://chatscrypt.github.io/2020/01/20/the-chatscrypt-architecture-part-ii-repeated-triple-diffie-hellman">Part II</a> in this series, solving the issues I realized as I was analyzing the R2DH. In addition, as far as I can tell, it has all the properties advertised of the Signal protocol on Wikipedia: "confidentiality, integrity, authentication, participant consistency, destination validation, forward secrecy, post-compromise security (aka future secrecy), causality preservation, message unlinkability, message repudiation, participation repudiation, and asynchronicity." Let's briefly go through them:
+I came up with the Authenticated Inductive Diffie-Hellman (AIDH) protocol as I finished up <a href="https://chatscrypt.github.io/2020/01/20/the-chatscrypt-architecture-part-ii-repeated-triple-diffie-hellman">Part II</a> in this series, solving the issues I realized as I was analyzing the R2DH (it was very tempting to call this the R2D2 protocol). In addition, as far as I can tell, it has all the properties advertised of the Signal protocol on Wikipedia: "confidentiality, integrity, authentication, participant consistency, destination validation, forward secrecy, post-compromise security (aka future secrecy), causality preservation, message unlinkability, message repudiation, participation repudiation, and asynchronicity." Let's briefly go through them:
 <ul>
 <li> Confidentiality: Messages are encrypted and can only be read by Alice and Bob.
 <li> Integrity: If an attacker modifies a message ciphertext, it is completely destroyed.
@@ -57,16 +57,15 @@ If roles are reversed and Alice receives the first message, she intializes as fo
 </ul>
 
 <h2>Sending a message</h2>
-Alice creates a new Diffie-Hellman key pair with private key <b>x</b> and encrypts her message using the shared Diffie-Hellman encryption key 
+Alice creates a new Diffie-Hellman key pair with private key <b>x</b> and encrypts her message using the shared Diffie-Hellman encryption keys 
 <div class="media">
-<b>g^(xy) mod N.</b>
+<b>g^(xy) mod N</b> and <b>g^(x'y) mod N</b>.
 </div>
 
 She attaches the following to her message:
 <ul>
 <li> (unencrypted) The public keys <b>g^x, g^x', g^y mod N</b>. The latter two are optional.
-<li> (unencrypted) A hash of the past shared key <b>g^(x'y) mod N</b>.
-<li> (encrypted) The message number.
+<li> (encrypted) The message number, and for padding, a timestamp.
 </ul>
 
 <p>Alice then updates her state:
@@ -76,9 +75,7 @@ She attaches the following to her message:
 
 <h2> Receiving a message</h2>
 
-The attached public keys in this case are <b>g^y, g^y', g^x mod N</b>. She searches for <b>y'</b> in her list of Bob's public keys. She searches for <b>x</b> in her list of private keys. 
-
-<p>Alice decrypts the message using  <b>g^y mod N</b> and <b>x</b>, and verifies the past shared key is indeed constructed from <b>x</b> and <b>y'</b>. She updates her state as follows:
+The attached public keys in this case are <b>g^y, g^y', g^x mod N</b>. For authentication, she searches for <b>y'</b> in her list of Bob's public keys. She searches for <b>x</b> in her list of private keys. She decrypts the message and updates her state as follows if the message number and timestamp are sensible:
 
 <ul>
 <li>She pushes the message number to her list of integers. If the list is contiguous from the beginning, she can empty the list.
