@@ -29,7 +29,7 @@ I came up with the Authenticated Inductive Diffie-Hellman (AIDH) protocol as I f
 <ul>
 <li>A list of integers enumerating which of Bob's messages she has received so far. (The contiguous part stemming from 0 may be deleted.) Should typically be length 0.
 <li>A list of her most recent private encryption keys, with newest key <b>x</b> and oldest key <b>x'</b>. Typically length 2 if Alice sent the last message, and length 1 if Bob did.
-<li>A list of Bob's most recent public encryption keys, with newest key <b>g^y mod N</b>. Typically length 2.
+<li>A list of Bob's most recent public encryption keys, with newest key <b>g^y mod N</b>. Typically long; as many messages as Bob has sent without Alice's reply.
 </ul>
 
 
