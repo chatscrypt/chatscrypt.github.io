@@ -64,7 +64,7 @@ Alice creates a new Diffie-Hellman key pair with private key <b>x</b> and encryp
 She attaches the following to her message:
 <ul>
 <li> (unencrypted) The public keys <b>g^x, g^x', g^y mod N</b>.
-<li> (encrypted) The past shared key <b>g^(x'y) mod N</b>.
+<li> (encrypted) A hash of the past shared key <b>g^(x'y) mod N</b>.
 <li> (encrypted) The message number.
 </ul>
 
