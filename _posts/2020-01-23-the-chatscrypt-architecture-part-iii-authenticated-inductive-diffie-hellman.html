@@ -27,16 +27,16 @@ I came up with the Authenticated Inductive Diffie-Hellman (AIDH) protocol as I f
 
 <p>Once the protocol is initiated, inbetween messages Alice will have:
 <ul>
-<li>A list of integers enumerating which of Bob's messages she has received so far. (The contiguous part stemming from 0 may be deleted.) Should typically by length 0.
+<li>A list of integers enumerating which of Bob's messages she has received so far. (The contiguous part stemming from 0 may be deleted.) Should typically be length 0.
 <li>A list of her most recent private encryption keys, with newest key <b>x</b> and oldest key <b>x'</b>. Typically length 2 if Alice sent the last message, and length 1 if Bob did.
-<li>A list of Bob's most recent public encryption keys, with newest key <b>g^y mod N</b>. Typically length 1.
+<li>A list of Bob's most recent public encryption keys, with newest key <b>g^y mod N</b>. Typically length 2.
 </ul>
 
 
 <h2>Initialization</h2>
 Bob publishes to the server a new signed public key <b>g^y mod N</b>. He refreshes this key every time someone initiates a new correspondence with him. Alice publishes to the server an unsigned but long-term public key <b>g^a mod N</b>.
 
-<p>When Alice wants to initiate a correspondence with Bob, she fetches this public key, verifies the signature, and sends some metadata to Bob using the shared Diffie-Hellman encryption key
+<p>When Alice wants to initiate a correspondence with Bob, she fetches Bob's signed public key, verifies the signature, and sends some metadata to Bob using the shared Diffie-Hellman encryption key
 <div class="media">
 <b>g^(ay) mod N.</b>
 </div>
