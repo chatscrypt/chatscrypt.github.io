@@ -34,7 +34,7 @@ I came up with the Authenticated Inductive Diffie-Hellman (AIDH) protocol as I f
 
 
 <h2>Initialization</h2>
-Bob publishes to the server a new signed public key <b>g^y mod N<\b>. He refreshes this key every time someone initiates a new correspondence with him. Alice publishes to the server an unsigned but long-term public key <b>g^a mod N<\b>.
+Bob publishes to the server a new signed public key <b>g^y mod N</b>. He refreshes this key every time someone initiates a new correspondence with him. Alice publishes to the server an unsigned but long-term public key <b>g^a mod N<\b>.
 
 <p>When Alice wants to initiate a correspondence with Bob, she fetches this public key, verifies the signature, and sends some metadata to Bob using the shared Diffie-Hellman encryption key
 <div class="media">
@@ -45,14 +45,14 @@ Alice then initalizes her state:
 <ul>
 <li>She creates an empty array of integers.
 <li>Alice's private key list is initialized with <b>x = a</b>.
-<li>Bob's public key list is initialized with <b>g^y mod N<\b>.
+<li>Bob's public key list is initialized with <b>g^y mod N</b>.
 </ul>
 
 If roles are reversed and Alice receives the first message, she intializes as follows: 
 <ul>
 <li>She creates a list of integers initialized with 1.
 <li>Alice's private key list is initialized with her published server key <b>x</b>.
-<li>Bob's public key list is initialized with <b>g^b mod N<\b>.
+<li>Bob's public key list is initialized with <b>g^b mod N</b>.
 </ul>
 
 <h2>Sending a message</h2>
@@ -70,7 +70,7 @@ She attaches the following to her message:
 
 <p>Alice then updates her state:
 <ul>
-<li>She pushes <b>x<b> to her list of recent private keys.
+<li>She pushes <b>x</b> to her list of recent private keys.
 </ul>
 
 <h2> Receiving a message</h2>
