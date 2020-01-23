@@ -1,0 +1,86 @@
+---
+layout: post
+title: "The ChatScrypt Architecture Part III: Authenticated Inductive Diffie-Hellman"
+comments: true
+date: 2020-01-20
+---
+
+I came up with the Authenticated Inductive Diffie-Hellman (AIDH) protocol as I finished up <a href="https://chatscrypt.github.io/2020/01/20/the-chatscrypt-architecture-part-ii-repeated-triple-diffie-hellman">Part II</a> in this series, solving the issues I realized as I was analyzing the R2DH. In addition, as far as I can tell, it has all the properties advertised of the Signal protocol on Wikipedia: "confidentiality, integrity, authentication, participant consistency, destination validation, forward secrecy, post-compromise security (aka future secrecy), causality preservation, message unlinkability, message repudiation, participation repudiation, and asynchronicity." Let's briefly go through them:
+<ul>
+<li> Confidentiality: Messages are encrypted and can only be read by Alice and Bob.
+<li> Integrity: If an attacker modifies a message ciphertext, it is completely destroyed.
+<li> Authentication: Alice can prove she has the private key of a long-term public key known to be Alice's, authenticating herself. (The public key needs to be verified by Bob externally, in real life.)
+<li> Participant consistency: For pairwise conversations, this is automatic from authentication.
+<li> Destination validation: To be honest I'm not sure what this means, but Alice eventually knows whether Bob received her message.
+<li> Forward secrecy: Old ciphertexts have keys that are not obtainable from future keys.
+<li> Future secrecy: The current key is not derivable from past keys.
+<li> Causality preservation: Information about the order of messages is encrypted along with the messages.
+<li> Message unlinkability: Breaking one message compromises none of the security properties of another message. 
+<li> Message repudiation (deniability): Bob may publish a message but Alice may claim it was forged or modified.
+<li> Participation repudation (strong deniability): Same as message repudiation, but for whole conversations.
+<li> Asynchronicity: Alice can sent messages to a mailbox for Bob; he doesn't need to be there.
+</ul>
+
+<p>The AIDH protocol is simpler than the Signal protocol and achieves equivalent or superior security (aside from "security through obscurity," since a more complicated protocol is tautologically more obscure). I'm not entirely sure how much simpler though, because I'm not a fan of the published exposition for the Signal protocol. I will present AIDH using an inductive "finite state machine" type approach.
+
+<h2>Alice's state</h2>
+
+<p>Once the protocol is initiated, inbetween messages Alice will have:
+<ul>
+<li>A list of integers enumerating which of Bob's messages she has received so far. (The contiguous part stemming from 0 may be deleted.)
+<li>A list of her most recent private encryption keys, with newest key <b>x</b> and oldest key <b>x'</b>.
+<li>A list of Bob's most recent public encryption keys, with newest key <b>g^y mod N</b>.
+</ul>
+
+
+<h2>Initialization</h2>
+Bob publishes to the server a new signed public key <b>g^y mod N<\b>. He refreshes this key every time someone initiates a new correspondence with him. Alice publishes to the server an unsigned but long-term public key <b>g^a mod N<\b>.
+
+<p>When Alice wants to initiate a correspondence with Bob, she fetches this public key, verifies the signature, and sends some metadata to Bob using the shared Diffie-Hellman encryption key
+<div class="media">
+<b>g^(ay) mod N.</b>
+</div>
+
+Alice then initalizes her state:
+<ul>
+<li>She creates an empty array of integers.
+<li>Alice's private key list is initialized with <b>x = a</b>.
+<li>Bob's public key list is initialized with <b>g^y mod N<\b>.
+</ul>
+
+If roles are reversed and Alice receives the first message, she intializes as follows: 
+<ul>
+<li>She creates a list of integers initialized with 1.
+<li>Alice's private key list is initialized with her published server key <b>x</b>.
+<li>Bob's public key list is initialized with <b>g^b mod N<\b>.
+</ul>
+
+<h2>Sending a message</h2>
+Alice creates a new Diffie-Hellman key pair with private key <b>x</b> and encrypts her message using the shared Diffie-Hellman encryption key 
+<div class="media">
+<b>g^(xy) mod N.</b>
+</div>
+
+She attaches the following to her message:
+<ul>
+<li> (unencrypted) The public keys <b>g^x, g^x', g^y mod N</b>.
+<li> (encrypted) The past shared key <b>g^(x'y) mod N</b>.
+<li> (encrypted) The message number.
+</ul>
+
+<p>Alice then updates her state:
+<ul>
+<li>She pushes <b>x<b> to her list of recent private keys.
+</ul>
+
+<h2> Receiving a message</h2>
+
+The attached public keys in this case are <b>g^y, g^y', g^x mod N</b>. She searches for <b>y'</b> in her list of Bob's public keys. She searches for <b>x</b> in her list of private keys. 
+
+<p>Alice decrypts the message using  <b>g^y mod N</b> and <b>x</b>, and verifies the past shared key is indeed constructed from <b>x<b> and <b>y'</b>. She updates her state as follows:
+
+<ul>
+<li>She pushes the message number to her list of integers. If the list is contiguous from the beginning, she can empty the list.
+<li>If the messages were contiguous, Alice may delete all of her private keys (strictly) before <b>x</b>. (Bob has used it, and from now on he will only use it or a newer key.)
+<li>Alice adds the new key <b>g^y mod N</b>. If the messages were contiguous, she may delete all of Bob's public keys (strictly) before <b>y'</b>.
+</ul>
