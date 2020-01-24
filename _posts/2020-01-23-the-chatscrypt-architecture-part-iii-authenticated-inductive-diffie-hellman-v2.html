@@ -1,0 +1,85 @@
+---
+layout: post
+title: "The ChatScrypt Architecture Part III: Authenticated Inductive Diffie-Hellman v2"
+comments: true
+date: 2020-01-23
+---
+
+I decided to carefully write out my third and hopefully final attempt at the protocol I will be using for ChatScrypt, the AIDH protocol with a bounded number of keys. This will be slightly different from how I ended the previous post, in that Alice will ask for permission to update her own keys, not Bob's. As I hinted at earlier, this is actually quite similar to the Signal protocol in some sense, but on the other hand it simplifies the E3DH significantly, and removes KDF chains.
+
+<p>I will omit writing literal public keys <b>g^x mod N</b>, writing just "public key <b>x</b>" instead.
+
+
+<h2>Alice's state</h2>
+
+<p>Once the protocol is initiated, Alice will have the following state variables:
+<ul>
+<li>The number of messages <b>M</b> she has sent so far, and a list of integers enumerating which of Bob's messages she has received so far. (The contiguous part stemming from 0 may be deleted.) The list should typically be length 1.
+<li>Alice's current private key <b>x</b> and next private key <b>x*</b>.
+<li>Bob's current public key <b>y</b>, and and previous public key <b>y'</b>.
+<li>The number <b>X*</b> of Alice's message which used <b>x*</b>, and the number <b>Y</b> of Bob's message which used <b>y</b>.
+<li>A binary indicating whether a new update request needs to be initiated at the next outgoing message; and a second binary indicating that Bob's update request has been approved. Call these the "update needed" and "approved" binaries, respectively.
+</ul>
+
+
+
+<h2>Initialization</h2>
+Bob publishes to the server a new signed public key <b>y</b>. He refreshes this key every time someone initiates a new correspondence with him. Alice publishes to the server an unsigned but long-term public key <b>a</b>.
+
+<p>When Alice wants to initiate a correspondence with Bob, she fetches Bob's signed public key, verifies the signature, and sends some metadata to Bob using the shared Diffie-Hellman encryption key
+<div class="media">
+<b>g^(ay) mod N.</b>
+</div>
+
+Alice then initalizes her state:
+<ul>
+<li>The number of messages she has sent so far is <b>M = 0</b>, and Alice creates an empty list of integers.
+<li>All private keys are set to <b>a</b>.
+<li>All of Bob's public keys are set to <b>y</b>. 
+<li>Both numbers are set to 0.
+</ul>Update needed is true; approved is false.
+
+Bob is similarly initialized, with private keys set to <b>y</b> and public keys set to <b>a</b>.
+
+
+
+<h2>Sending a message</h2>
+Alice creates a new Diffie-Hellman key pair with private key <b>r</b>. She then updates her state:
+
+<ul>
+<li>Increment <b>M = M + 1</b>. The integer list is unchanged.
+<li>If an update is needed, update <b>x* = r</b>.
+<li>Both of Bob's public keys are unchanged.
+<li>If an update is needed, update <b>X* = M</b>.
+<li>The new update request is complete, so the binary is set to false. The approved binary is copied into the message below, and then set to false.
+</ul>
+
+Then Alice encrypts her message using the shared Diffie-Hellman encryption keys 
+<div class="media">
+<b>g^(xy) mod N</b> and <b>g^(ry) mod N</b>.
+</div>
+
+She attaches the following to her message:
+<ul>
+<li> (unencrypted) The public key <b>r</b>. 
+<li> (encrypted) The message number <b>M</b>, and the number of messages Bob has sent Alice (0 if not contiguous).
+<li> (encrypted) The message number <b>X*</b> associated to candidate private key <b>x*<b>.
+<li> (encrypted) The approved binary is included here.
+</ul>
+
+
+
+
+
+<h2> Receiving a message</h2>
+
+Bob decrypts the message using <b>x, y, r</b>. He updates his state as follows if the message number and timestamp are sensible.
+
+<ul>
+<li>Bob's <b>M</b> is unchanged. The integer list is updated. If the list is contiguous from the beginning, Bob can empty the list. If either the list is not contiguous, or Alice's side is not contiguous, or Alice has received fewer messages than Bob has sent, a flag is raised.
+<li>If the approved binary in the message is true, update <b>y = y*</b>.
+<li>Bob has a number <b>X</b> of Alice's message which used <b>x</b>; if it doesn't match <b>X*</b>, check if Alice's <b>M = X*</b> (it should unless messages have fallen out of order); If so, update <b>x' = x</b> and <b>x = r</b>.
+<li>If the previous step took action, fix the numbers: Update <b>X = M</b>. 
+<li>If the approved binary in the message is true, a new update request needs to be initiated. If the previous step took action, the approved binary is true.
+</ul>
+
