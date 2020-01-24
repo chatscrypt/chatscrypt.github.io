@@ -35,9 +35,9 @@ Bob publishes to the server a new signed public key <b>y</b>. He refreshes this 
 
 Alice then initalizes her state:
 <ul>
-<li>The number of messages she has sent so far is <b>M = 0</b>, and Alice creates an empty list of integers.
-<li>All private keys are set to <b>a</b>.
-<li>All of Bob's public keys are set to <b>y</b>. 
+<li>The number of messages she has sent so far is <b>M = 0</b>, and the list of integers of receipted messsages is empty.
+<li>Both private keys are set to <b>a</b>.
+<li>Both of Bob's public keys are set to <b>y</b>. 
 <li>Both numbers are set to 0.
 <li>Update needed is true; Approved is false.
 </ul>
@@ -67,7 +67,7 @@ She attaches the following to her message:
 <li> (unencrypted) The public key <b>r</b>. 
 <li> (encrypted) The message number <b>M</b>, and the number of messages Bob has sent Alice (0 if not contiguous).
 <li> (encrypted) The message number <b>X*</b> associated to candidate private key <b>x*</b>.
-<li> (encrypted) The approved binary is included here.
+<li> (encrypted) The Approved binary is included here.
 </ul>
 
 
@@ -76,7 +76,7 @@ She attaches the following to her message:
 
 <h2> Receiving a message</h2>
 
-Bob decrypts the message using <b>x', y, r</b> or <b>x, y, r</b>. He updates his state as follows if the message number and timestamp are sensible.
+Bob decrypts the message using three of <b>x', x, y, y*, r</b>, testing perhaps on a header to see which set of keys works (four possibilities). He updates his state as follows if the message number and timestamp are sensible.
 
 <ul>
 <li>Bob's <b>M</b> is unchanged. The integer list is updated. If the list is contiguous from the beginning, Bob can empty the list. If either the list is not contiguous, or Alice's side is not contiguous, or Alice has received fewer messages than Bob has sent, a flag is raised.
