@@ -32,7 +32,7 @@ I came up with the Authenticated Inductive Diffie-Hellman (AIDH) protocol as I f
 <li>A list of Bob's most recent public encryption keys, with newest key <b>g^y mod N</b>. Typically long, with length equal to how many messages Bob has sent without Alice's reply.
 </ul>
 
-<p>In the alternative/augmented implementation discussed at the end, there would be no need for lists; each would be length 1.
+<p>In the alternative/augmented implementation discussed at the end, there would be no need for lists; each would be length 2.
 
 
 <h2>Initialization</h2>
@@ -89,11 +89,11 @@ For authentication, Bob searches for <b>x'</b> in his list of Alice's public key
 
 The reason we maintain lists of keys as opposed to single keys is to handle delayed and out-of-order messages. This implementation is good if you are more worried about forward and future secrecy than key storage: All keys are refreshed with optimal expediency. With respect to key storage, I should remark that the private keys in AIDH are entirely independent, fresh from a random number generator, so the above implementation is no less secure than Signal already, which also stores old (independent) keys in pathological situations.
 
-<p> For those worried about storing so many keys however, we describe an alternative implementation, which keeps key lists at bounded length. The idea is to update which of Bob's public keys Alice uses, very judiciously. She will persist in using the same old key of Bob's, but with every message she will ask for permission to update to a new public key - the newest public key of Bob's that she has seen. She requests the same key until Bob replies to this specific request, either affirmatively or negatively. If negatively, then she simply moves on to request another key - the newest that she has seen.
+<p> For those worried about storing so many keys however, we describe an alternative implementation, which keeps key lists each at length 2. The idea is to update which of Bob's public keys Alice uses, very judiciously. She will persist in using the same old key of Bob's, but with every message she will ask for permission to update to a new public key - the newest public key of Bob's that she has seen. She requests the same key until Bob replies to this specific request, either affirmatively or negatively. If negatively, then she simply moves on to request another key - the newest that she has seen.
   
 <p>Bob of course will approve the request if he still has the requested private key on hand, and decline if not. In the typical case, the most recent key Alice has seen is the key Bob has most recently used, and thus should still have.
   
- <p>This implementation has just the slightest weakening of forward and future secrecy: The recipient key update requires one extra exchange, and further may fail to update if the recipient "squeezes in" a message in the split second before Alice's permission request arrives. In exchange, Alice keeps only four keys at any time: 
+ <p>This implementation has just the slightest weakening of forward and future secrecy: Alice's recipient key <b>y</b> update requires one extra exchange, and further may fail to update if Bob "squeezes in" a message in the split second before her permission request reaches him. The advantage is that Alice keeps only four keys at any time: 
   
 <ul>
 <li>The public key of Bob's which she uses to send Bob messages privately, and which Bob can use to authenticate himself.
@@ -101,5 +101,7 @@ The reason we maintain lists of keys as opposed to single keys is to handle dela
 <li>The private key of Alice's which Bob uses to send her messages privately, and which she can use to authenticate herself to Bob.
 <li>The recent private key of Alice's which Bob might request to replace the previous key.
 </ul>
+
+In some sense, the former implementation is strictly more secure, as using more keys is simply more secure than reusing keys, as is done here.
 
 
