@@ -66,7 +66,7 @@ Alice creates a new Diffie-Hellman key pair with private key <b>x</b> and encryp
 She attaches the following to her message:
 <ul>
 <li> (unencrypted) The public keys <b>g^x, g^x', g^y mod N</b>. The latter two may be excluded, especially in the alternative implementation discussed below, where there are much fewer stored keys to "try out."
-<li> (encrypted) The message number, the number of messages Bob has sent Alice (0 if not contiguous) and for padding, perhaps a timestamp.
+<li> (encrypted) The message number, the number of messages Bob has sent Alice (0 if not contiguous), and for padding, perhaps a timestamp.
 </ul>
 
 <p>Alice then updates her state:
@@ -87,7 +87,7 @@ For authentication, Bob searches for <b>x'</b> in his list of Alice's public key
 
 <h2>Alternative implementation</h2>
 
-The reason we maintain lists of keys as opposed to single keys is to handle delayed and out-of-order messages. This implementation is good if you are more worried about forward and future secrecy than key storage: All keys are updated with optimal expediency. With respect to key storage, I should remark that the private keys in AIDH are entirely independent, fresh from a random number generator, so with the above implementation this is no less secure than Signal, which also stores old keys in pathological situations.
+The reason we maintain lists of keys as opposed to single keys is to handle delayed and out-of-order messages. This implementation is good if you are more worried about forward and future secrecy than key storage: All keys are refreshed with optimal expediency. With respect to key storage, I should remark that the private keys in AIDH are entirely independent, fresh from a random number generator, so the above implementation is no less secure than Signal already, which also stores old (independent) keys in pathological situations.
 
 <p> For those worried about storing so many keys however, we describe an alternative implementation, which keeps key lists at bounded length. The idea is to update which of Bob's public keys Alice uses, very judiciously. She will persist in using the same old key of Bob's, but with every message she will ask for permission to update to a new public key - the newest public key of Bob's that she has seen. She requests the same key until Bob replies to this specific request, either affirmatively or negatively. If negatively, then she simply moves on to another key - the newest that she has seen.
   
