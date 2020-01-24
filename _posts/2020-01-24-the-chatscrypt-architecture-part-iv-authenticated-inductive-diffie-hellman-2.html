@@ -19,7 +19,6 @@ I decided to carefully write out my third and hopefully final attempt at the pro
 <li>The number of messages <b>M</b> she has sent, and a list of integers enumerating which of Bob's messages she has received. (The contiguous part stemming from 0 may be deleted.) The list should typically be length 1.
 <li>Alice's current private key <b>x</b> and pending private key <b>x*</b>, waiting for approval from Bob.
 <li>Bob's current public key <b>y</b> and previous public key <b>y'</b>, in case Alice has updated to <b>y</b>, but waits a bit to tell Bob.
-<li>A binary indicating whether a new update request needs to be initiated at the next outgoing message; and a second binary indicating that Bob's update request has been approved. Call these the "Update" and "Approved" binaries, respectively.
 <li>A binary that is either Active or Passive. If Active, this indicates that Alice's next message with have two effects: initiating a new key update request, and notifying Bob that his update request has been approved. Both will instigate updates in Bob's keys.
 </ul>
 
@@ -62,7 +61,7 @@ She attaches the following to her message:
 Lastly, she updates her state:
 <ul>
 <li>Increment <b>M = M + 1</b>. The integer list is unchanged.
-<li>If Active, update <b>x* = r</b>.
+<li>If Active, update private <b>x* = r</b>.
 <li>Both of Bob's public keys are unchanged.
 <li>Set to Passive.
 </ul>
@@ -76,7 +75,7 @@ If Bob is Active, he decrypts the message using <b>x', y, r</b>. If he is Passiv
 
 <ul>
 <li>Bob's <b>M</b> is unchanged. The integer list is updated. If the list is contiguous from the beginning, Bob can empty the list. If either the list is not contiguous, Alice's side is not contiguous, or Alice has received fewer messages than Bob has sent, a flag is raised; Bob should wait until this is rectified by itself (if it doesn't, the conversation has lost its integrity and a new communication should be initiated). 
-<li>If the message binary is Active, update <b>y = y*</b>.
-<li>If the message binary is Active, update <b>x' = x</b> and <b>x = r</b>.
+<li>If the message binary is Active, update private <b>y = y*</b>.
+<li>If the message binary is Active, update public <b>x' = x</b> and <b>x = r</b>.
 <li>If the message binary is Active, Bob's state binary becomes Active.
 </ul>
