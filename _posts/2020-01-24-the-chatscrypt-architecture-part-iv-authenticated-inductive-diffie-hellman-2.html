@@ -19,8 +19,7 @@ I decided to carefully write out my third and hopefully final attempt at the pro
 <li>The number of messages <b>M</b> she has sent, and a list of integers enumerating which of Bob's messages she has received. (The contiguous part stemming from 0 may be deleted.) The list should typically be length 1.
 <li>Alice's current private key <b>x</b> and pending private key <b>x*</b>, waiting for approval from Bob.
 <li>Bob's current public key <b>y</b> and previous public key <b>y'</b>, in case Alice has updated to <b>y</b>, but waits a bit to tell Bob.
-<li>The number <b>X*</b> of Alice's message which used <b>x*</b>, and the number <b>Y</b> of Bob's message which used <b>y</b>.
-<li>A binary indicating whether a new update request needs to be initiated at the next outgoing message; and a second binary indicating that Bob's update request has been approved. Call these the "Update needed" and "Approved" binaries, respectively.
+<li>A binary indicating whether a new update request needs to be initiated at the next outgoing message; and a second binary indicating that Bob's update request has been approved. Call these the "Update" and "Approved" binaries, respectively.
 </ul>
 
 
@@ -38,8 +37,7 @@ Alice then initializes her state:
 <li>The number of messages she has sent so far is <b>M = 0</b>, and the list of integers of receipted messsages is empty.
 <li>Both private keys are set to <b>a</b>.
 <li>Both of Bob's public keys are set to <b>y</b>. 
-<li>Both numbers are set to 0.
-<li>Update needed is true; Approved is false.
+<li>Update is true; Approved is false.
 </ul>
 
 <p>Bob is similarly initialized, with private keys set to <b>y</b> and public keys set to <b>a</b>.
@@ -51,10 +49,9 @@ Alice creates a new Diffie-Hellman key pair with private key <b>r</b>. She then 
 
 <ul>
 <li>Increment <b>M = M + 1</b>. The integer list is unchanged.
-<li>If an update is needed, update <b>x* = r</b>.
+<li>If Update is true, update <b>x* = r</b>.
 <li>Both of Bob's public keys are unchanged.
-<li>If an update is needed, update <b>X* = M</b>.
-<li>The new update request is initialized, so the binary is set to false. The Approved binary is copied into the message below, and then set to false.
+<li>Both binaries are copied into the message below and then set to false.
 </ul>
 
 Then Alice encrypts her message using the shared Diffie-Hellman encryption keys 
@@ -66,8 +63,7 @@ She attaches the following to her message:
 <ul>
 <li> (unencrypted) The public key <b>r</b>. 
 <li> (encrypted) The message number <b>M</b>, and the number of messages Bob has sent Alice (0 if not contiguous).
-<li> (encrypted) The message number <b>X*</b> associated to candidate private key <b>x*</b>.
-<li> (encrypted) The Approved binary is included here.
+<li> (encrypted) The binaries are included here.
 </ul>
 
 
@@ -81,8 +77,7 @@ Bob decrypts the message using three of <b>x', x, y, y*, r</b>, testing perhaps 
 <ul>
 <li>Bob's <b>M</b> is unchanged. The integer list is updated. If the list is contiguous from the beginning, Bob can empty the list. If either the list is not contiguous, or Alice's side is not contiguous, or Alice has received fewer messages than Bob has sent, a flag is raised.
 <li>If the Approved binary in the message is true, update <b>y = y*</b>.
-<li>Bob has the number <b>X</b> of Alice's message which used <b>x</b>; if it doesn't match <b>X*</b>, check if Alice's <b>M = X*</b> (it should unless messages have fallen out of order); If so, update <b>x' = x</b> and <b>x = r</b>.
-<li>If the previous step took action, fix the numbers: Update <b>X = M</b>. 
-<li>If the Approved binary in the message is true, Update needed (in Bob's state) becomes true. If the previous step took action, the Approved binary is true.
+<li>If the Update binary in the message is true, update <b>x' = x</b> and <b>x = r</b>.
+<li>If the Approved binary in the message is true, Update (in Bob's state) becomes true. If the Update binary in the message is true, Approved (in Bob's state) becomes true.
 </ul>
 
