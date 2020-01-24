@@ -74,7 +74,7 @@ She attaches the following to her message:
 
 <h2> Receiving a message</h2>
 
-Bob decrypts the message using <b>x, y, r</b>. He updates his state as follows if the message number and timestamp are sensible.
+Bob decrypts the message using <b>x', y, r</b> or <b>x, y, r</b>. He updates his state as follows if the message number and timestamp are sensible.
 
 <ul>
 <li>Bob's <b>M</b> is unchanged. The integer list is updated. If the list is contiguous from the beginning, Bob can empty the list. If either the list is not contiguous, or Alice's side is not contiguous, or Alice has received fewer messages than Bob has sent, a flag is raised.
