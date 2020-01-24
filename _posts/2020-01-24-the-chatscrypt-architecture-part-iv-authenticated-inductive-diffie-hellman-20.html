@@ -33,7 +33,7 @@ Bob publishes to the server a new signed public key <b>y</b>. He refreshes this 
 <b>g^(ay) mod N.</b>
 </div>
 
-Alice then initalizes her state:
+Alice then initializes her state:
 <ul>
 <li>The number of messages she has sent so far is <b>M = 0</b>, and the list of integers of receipted messsages is empty.
 <li>Both private keys are set to <b>a</b>.
@@ -81,7 +81,7 @@ Bob decrypts the message using three of <b>x', x, y, y*, r</b>, testing perhaps 
 <ul>
 <li>Bob's <b>M</b> is unchanged. The integer list is updated. If the list is contiguous from the beginning, Bob can empty the list. If either the list is not contiguous, or Alice's side is not contiguous, or Alice has received fewer messages than Bob has sent, a flag is raised.
 <li>If the Approved binary in the message is true, update <b>y = y*</b>.
-<li>Bob has a number <b>X</b> of Alice's message which used <b>x</b>; if it doesn't match <b>X*</b>, check if Alice's <b>M = X*</b> (it should unless messages have fallen out of order); If so, update <b>x' = x</b> and <b>x = r</b>.
+<li>Bob has the number <b>X</b> of Alice's message which used <b>x</b>; if it doesn't match <b>X*</b>, check if Alice's <b>M = X*</b> (it should unless messages have fallen out of order); If so, update <b>x' = x</b> and <b>x = r</b>.
 <li>If the previous step took action, fix the numbers: Update <b>X = M</b>. 
 <li>If the Approved binary in the message is true, Update needed (in Bob's state) becomes true. If the previous step took action, the Approved binary is true.
 </ul>
