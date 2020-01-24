@@ -40,7 +40,7 @@ Alice then initalizes her state:
 <li>Update needed is true; Approved is false.
 </ul>
 
-Bob is similarly initialized, with private keys set to <b>y</b> and public keys set to <b>a</b>.
+<p>Bob is similarly initialized, with private keys set to <b>y</b> and public keys set to <b>a</b>.
 
 
 
@@ -52,7 +52,7 @@ Alice creates a new Diffie-Hellman key pair with private key <b>r</b>. She then 
 <li>If an update is needed, update <b>x* = r</b>.
 <li>Both of Bob's public keys are unchanged.
 <li>If an update is needed, update <b>X* = M</b>.
-<li>The new update request is complete, so the binary is set to false. The approved binary is copied into the message below, and then set to false.
+<li>The new update request is initialized, so the binary is set to false. The Approved binary is copied into the message below, and then set to false.
 </ul>
 
 Then Alice encrypts her message using the shared Diffie-Hellman encryption keys 
