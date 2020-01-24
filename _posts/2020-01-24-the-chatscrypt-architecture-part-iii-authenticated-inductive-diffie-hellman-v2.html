@@ -2,7 +2,7 @@
 layout: post
 title: "The ChatScrypt Architecture Part IV: Authenticated Inductive Diffie-Hellman v2"
 comments: true
-date: 2020-01-23
+date: 2020-01-24
 ---
 
 I decided to carefully write out my third and hopefully final attempt at the protocol I will be using for ChatScrypt, the AIDH protocol with a bounded number of keys. This will be slightly different from how I ended the previous post, in that Alice will ask for permission to update her own keys, not Bob's. As I hinted at earlier, this is actually quite similar to the Signal protocol in some sense, but on the other hand it simplifies the E3DH significantly, and removes KDF chains from the Double Ratchet.
