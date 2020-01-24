@@ -45,16 +45,7 @@ Alice then initializes her state:
 
 
 <h2>Sending a message</h2>
-Alice creates a new Diffie-Hellman key pair with private key <b>r</b>. She then updates her state:
-
-<ul>
-<li>Increment <b>M = M + 1</b>. The integer list is unchanged.
-<li>If Update is true, update <b>x* = r</b>.
-<li>Both of Bob's public keys are unchanged.
-<li>Both binaries are copied into the message below and then set to false.
-</ul>
-
-Then Alice encrypts her message using the shared Diffie-Hellman encryption keys 
+Alice creates a new Diffie-Hellman key pair with private key <b>r</b> and then encrypts her message using the shared Diffie-Hellman encryption keys 
 <div class="media">
 <b>g^(xy) mod N</b> and <b>g^(ry) mod N</b>.
 </div>
@@ -62,10 +53,18 @@ Then Alice encrypts her message using the shared Diffie-Hellman encryption keys
 She attaches the following to her message:
 <ul>
 <li> (unencrypted) The public key <b>r</b>. 
-<li> (encrypted) The message number <b>M</b>, and the number of messages Bob has sent Alice (0 if not contiguous).
+<li> (encrypted) The message number <b>M + 1</b>, and the number of messages Bob has sent Alice (0 if not contiguous).
 <li> (encrypted) The binaries are included here.
 </ul>
 
+
+Lastly, she updates her state:
+<ul>
+<li>Increment <b>M = M + 1</b>. The integer list is unchanged.
+<li>If Update is true, update <b>x* = r</b>.
+<li>Both of Bob's public keys are unchanged.
+<li>Both binaries are set to false.
+</ul>
 
 
 
