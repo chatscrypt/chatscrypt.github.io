@@ -80,7 +80,7 @@ Bob decrypts the message using three of <b>x', x, y, y*, r</b>, testing perhaps 
 
 <ul>
 <li>Bob's <b>M</b> is unchanged. The integer list is updated. If the list is contiguous from the beginning, Bob can empty the list. If either the list is not contiguous, or Alice's side is not contiguous, or Alice has received fewer messages than Bob has sent, a flag is raised.
-<li>If the approved binary in the message is true, update <b>y = y*</b>.
+<li>If the Approved binary in the message is true, update <b>y = y*</b>.
 <li>Bob has a number <b>X</b> of Alice's message which used <b>x</b>; if it doesn't match <b>X*</b>, check if Alice's <b>M = X*</b> (it should unless messages have fallen out of order); If so, update <b>x' = x</b> and <b>x = r</b>.
 <li>If the previous step took action, fix the numbers: Update <b>X = M</b>. 
 <li>If the Approved binary in the message is true, Update needed (in Bob's state) becomes true. If the previous step took action, the Approved binary is true.
