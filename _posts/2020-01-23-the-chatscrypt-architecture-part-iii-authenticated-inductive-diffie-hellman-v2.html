@@ -1,11 +1,11 @@
 ---
 layout: post
-title: "The ChatScrypt Architecture Part III: Authenticated Inductive Diffie-Hellman v2"
+title: "The ChatScrypt Architecture Part IV: Authenticated Inductive Diffie-Hellman v2"
 comments: true
 date: 2020-01-23
 ---
 
-I decided to carefully write out my third and hopefully final attempt at the protocol I will be using for ChatScrypt, the AIDH protocol with a bounded number of keys. This will be slightly different from how I ended the previous post, in that Alice will ask for permission to update her own keys, not Bob's. As I hinted at earlier, this is actually quite similar to the Signal protocol in some sense, but on the other hand it simplifies the E3DH significantly, and removes KDF chains.
+I decided to carefully write out my third and hopefully final attempt at the protocol I will be using for ChatScrypt, the AIDH protocol with a bounded number of keys. This will be slightly different from how I ended the previous post, in that Alice will ask for permission to update her own keys, not Bob's. As I hinted at earlier, this is actually quite similar to the Signal protocol in some sense, but on the other hand it simplifies the E3DH significantly, and removes KDF chains from the Double Ratchet.
 
 <p>I will omit writing literal public keys <b>g^x mod N</b>, writing just "public key <b>x</b>" instead.
 
@@ -16,9 +16,9 @@ I decided to carefully write out my third and hopefully final attempt at the pro
 <ul>
 <li>The number of messages <b>M</b> she has sent so far, and a list of integers enumerating which of Bob's messages she has received so far. (The contiguous part stemming from 0 may be deleted.) The list should typically be length 1.
 <li>Alice's current private key <b>x</b> and next private key <b>x*</b>.
-<li>Bob's current public key <b>y</b>, and and previous public key <b>y'</b>.
+<li>Bob's current public key <b>y</b> and previous public key <b>y'</b>.
 <li>The number <b>X*</b> of Alice's message which used <b>x*</b>, and the number <b>Y</b> of Bob's message which used <b>y</b>.
-<li>A binary indicating whether a new update request needs to be initiated at the next outgoing message; and a second binary indicating that Bob's update request has been approved. Call these the "update needed" and "approved" binaries, respectively.
+<li>A binary indicating whether a new update request needs to be initiated at the next outgoing message; and a second binary indicating that Bob's update request has been approved. Call these the "Update needed" and "Approved" binaries, respectively.
 </ul>
 
 
@@ -37,7 +37,8 @@ Alice then initalizes her state:
 <li>All private keys are set to <b>a</b>.
 <li>All of Bob's public keys are set to <b>y</b>. 
 <li>Both numbers are set to 0.
-</ul>Update needed is true; approved is false.
+<li>Update needed is true; Approved is false.
+</ul>
 
 Bob is similarly initialized, with private keys set to <b>y</b> and public keys set to <b>a</b>.
 
