@@ -2,7 +2,7 @@
 layout: post
 title: "The ChatScrypt Architecture Part III: Authenticated Inductive Diffie-Hellman"
 comments: true
-date: 2020-01-20
+date: 2020-01-23
 ---
 
 I came up with the Authenticated Inductive Diffie-Hellman (AIDH) protocol as I finished up <a href="https://chatscrypt.github.io/2020/01/20/the-chatscrypt-architecture-part-ii-repeated-triple-diffie-hellman">Part II</a> in this series, solving the issues I realized as I was analyzing R2DH (you might call AIDH the "R2D2 protocol"). In addition, as far as I can tell, it has all the properties advertised of the Signal protocol on Wikipedia: "confidentiality, integrity, authentication, participant consistency, destination validation, forward secrecy, post-compromise security (aka future secrecy), causality preservation, message unlinkability, message repudiation, participation repudiation, and asynchronicity." Let's briefly go through them:
