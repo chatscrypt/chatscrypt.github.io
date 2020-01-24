@@ -25,14 +25,14 @@ I came up with the Authenticated Inductive Diffie-Hellman (AIDH) protocol as I f
 
 <h2>Alice's state</h2>
 
-<p>Once the protocol is initiated, inbetween messages Alice will have:
+<p>Once the protocol is initiated, between messages Alice will have:
 <ul>
-<li>A list of integers enumerating which of Bob's messages she has received so far. (The contiguous part stemming from 0 may be deleted.) Should typically be length 0.
-<li>A list of her most recent private encryption keys, with newest key <b>x</b> and oldest key <b>x'</b>. Typically long, if Alice has been sending a lot of messages. Short if Bob recently messaged.
-<li>A list of Bob's most recent public encryption keys, with newest key <b>g^y mod N</b>. Typically long; as many messages as Bob has sent without Alice's reply.
+<li>The number of messages she has sent so far, and a list of integers enumerating which of Bob's messages she has received so far. (The contiguous part stemming from 0 may be deleted.) The list should typically be length 1.
+<li>A list of her most recent private encryption keys, with newest key <b>x</b> and oldest key <b>x'</b>. Typically long, if Alice has been sending a lot of messages, and short if Bob recently messaged.
+<li>A list of Bob's most recent public encryption keys, with newest key <b>g^y mod N</b>. Typically long, with length equal to how many messages Bob has sent without Alice's reply.
 </ul>
 
-In the alternative/augmented implementation discussed at the end, the key lists will always be length 0, "long," and 2 respectively.
+<p>In the alternative/augmented implementation discussed at the end, there would be no need for lists; each would be length 1.
 
 
 <h2>Initialization</h2>
@@ -65,25 +65,41 @@ Alice creates a new Diffie-Hellman key pair with private key <b>x</b> and encryp
 
 She attaches the following to her message:
 <ul>
-<li> (unencrypted) The public keys <b>g^x, g^x', g^y mod N</b>. The latter two may be excluded, especially in the alternative implementation discussed below.
-<li> (encrypted) The message number, and for padding, a timestamp.
+<li> (unencrypted) The public keys <b>g^x, g^x', g^y mod N</b>. The latter two may be excluded, especially in the alternative implementation discussed below, where there are much fewer stored keys to "try out."
+<li> (encrypted) The message number, the number of messages Bob has sent Alice (0 if not contiguous) and for padding, perhaps a timestamp.
 </ul>
 
 <p>Alice then updates her state:
 <ul>
+<li>She increments her message count.
 <li>She pushes <b>x</b> to her list of recent private keys.
 </ul>
 
 <h2> Receiving a message</h2>
 
-For authentication, Bob searches for <b>x'</b> in his list of Alice's public keys. He searches for <b>y</b> in his list of private keys. He decrypts the message and updates his state as follows if the message number and timestamp are sensible:
+For authentication, Bob searches for <b>x'</b> in his list of Alice's public keys. He searches for <b>y</b> in his list of private keys. He decrypts the message and updates his state as follows if the message number and timestamp are sensible.
 
 <ul>
-<li>He pushes the message number to his list of integers. If the list is contiguous from the beginning, he can empty the list.
+<li>He pushes the message number to his list of integers. If the list is contiguous from the beginning, he can empty the list. If either the list is not contiguous, or Alice's side is not contiguous, or Alice has received fewer messages than Bob has sent, a flag is raised.
 <li>If the messages were contiguous, Bob may delete all of his private keys (strictly) before <b>y</b>. (Alice has seen it, so from now on all of her messages will use <b>y</b> or a newer key.)
-<li>Bob pushes the new key <b>g^x mod N</b> into his list of Alice's public keys. If the messages were contiguous, he may delete all of Alice's public keys (strictly) before <b>x'</b>. In the alternative implementation, keep only <b>x', x</b> regardless.
+<li>Bob pushes the new key <b>g^x mod N</b> into his list of Alice's public keys. If the messages were contiguous, he may delete all of Alice's public keys (strictly) before <b>x'</b>.
 </ul>
 
 <h2>Alternative implementation</h2>
 
-For the alternative implementation, Bob should refuse to send a message if the messages from Alice have not been contiguous.
+The reason we maintain lists of keys as opposed to single keys is to handle delayed and out-of-order messages. This implementation is good if you are more worried about forward and future secrecy than key storage: All keys are updated with optimal expediency. With respect to key storage, I should remark that the private keys in AIDH are entirely independent, fresh from a random number generator, so with the above implementation this is no less secure than Signal, which also stores old keys in pathological situations.
+
+<p> For those worried about storing so many keys however, we describe an alternative implementation, which keeps key lists at bounded length. The idea is to update which of Bob's public keys Alice uses, very judiciously. She will persist in using the same old key of Bob's, but with every message she will ask for permission to update to a new public key - the newest public key of Bob's that she has seen. She requests the same key until Bob replies to this specific request, either affirmatively or negatively. If negatively, then she simply moves on to another key - the newest that she has seen.
+  
+<p>Bob of course will approve the request if he still has the requested private key on hand, and decline if not. In the typical case, the most recent key Alice has seen is the key Bob has most recently used, and thus should still have.
+  
+ <p>This implementation has just the slightest weakening of forward and future secrecy: The recipient key update requires one extra exchange, and further may fail to update if the recipient "squeezes in" a message in the split second before Alice's permission request arrives. In exchange, Alice keeps only four keys at any time: 
+  
+<ul>
+<li>The public key of Bob's which she uses to send Bob messages privately, and which Bob can use to authenticate himself.
+<li>The recent public key of Bob's which Alice is/will shortly request to replace the previous key.
+<li>The private key of Alice's which Bob uses to send her messages privately, and which she can use to authenticate herself to Bob.
+<li>The recent private key of Alice's which Bob might request to replace the previous key.
+</ul>
+
+
