@@ -72,12 +72,11 @@ Lastly, she updates her state:
 
 <h2> Receiving a message</h2>
 
-If Bob is Active, he decrypts the message using <b>x', y, r</b>. If he is Passive, he uses <b>x, y, r</b>. He updates his state as follows if the message number and timestamp are sensible.
+If Bob is Active, he decrypts the message using <b>x', y, r</b>. If he is Passive, he uses <b>x, y*, r</b> (but if Bob recently became passive and Alice hasn't found out yet, he may need to revert to the other set as backup). He updates his state as follows if the message number and timestamp are sensible.
 
 <ul>
-<li>Bob's <b>M</b> is unchanged. The integer list is updated. If the list is contiguous from the beginning, Bob can empty the list. If either the list is not contiguous, or Alice's side is not contiguous, or Alice has received fewer messages than Bob has sent, a flag is raised.
+<li>Bob's <b>M</b> is unchanged. The integer list is updated. If the list is contiguous from the beginning, Bob can empty the list. If either the list is not contiguous, Alice's side is not contiguous, or Alice has received fewer messages than Bob has sent, a flag is raised; Bob should wait until this is rectified by itself (if it doesn't, the conversation has lost its integrity and a new communication should be initiated). 
 <li>If the message binary is Active, update <b>y = y*</b>.
 <li>If the message binary is Active, update <b>x' = x</b> and <b>x = r</b>.
 <li>If the message binary is Active, Bob's state binary becomes Active.
 </ul>
-
