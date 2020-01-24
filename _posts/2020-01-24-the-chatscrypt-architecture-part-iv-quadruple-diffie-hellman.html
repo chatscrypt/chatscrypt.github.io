@@ -1,11 +1,11 @@
 ---
 layout: post
-title: "The ChatScrypt Architecture Part IV: Authenticated Inductive Diffie-Hellman 2.0"
+title: "The ChatScrypt Architecture Part IV: Quadruple Diffie-Hellman"
 comments: true
 date: 2020-01-24
 ---
 
-I decided to carefully write out my third and hopefully final attempt at the protocol I will be using for ChatScrypt, the AIDH protocol with a bounded number of keys. This will be slightly different from how I ended the previous post, in that Alice will ask for permission to update her own keys, not Bob's. This is more efficient: It will always succeed as Alice is the one controlling her own key generation, since she can be patient (in contrast, in the previous post, Bob might be chatting away, generating more and more keys; he can't save them all waiting for Alice's requests, and so sometimes may need to deny if she's too slow). 
+I decided to carefully write out my third and hopefully final attempt at the protocol I will be using for ChatScrypt, the AIDH protocol with a bounded number of keys; I've settled on the name Quadruple Diffie-Hellman (QDH). This will be slightly different from how I ended the previous post, in that Alice will ask for permission to update her own keys, not Bob's. This is more efficient: It will always succeed as Alice is the one controlling her own key generation, since she can be patient (in contrast, in the previous post, Bob might be chatting away, generating more and more keys; he can't save them all waiting for Alice's requests, and so sometimes may need to deny if she's too slow). 
 
 <p>As I hinted at earlier, this is actually quite similar to the Signal protocol: There is some "back and forth" ratchet going on. On the other hand it is quite different, simplifying the E3DH significantly, and removing KDF chains entirely from the Double Ratchet.
 
