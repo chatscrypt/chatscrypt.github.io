@@ -1,11 +1,11 @@
 ---
 layout: post
-title: "The ChatScrypt Architecture Part IV: Quadruple Diffie-Hellman"
+title: "The ChatScrypt Architecture Part IV: Authenticated Inductive Diffie-Hellman 2.0"
 comments: true
 date: 2020-01-24
 ---
 
-I decided to carefully write out my third and hopefully final attempt at the protocol I will be using for ChatScrypt, a version of the AIDH protocol with four keys. I've settled on the name Quadruple Diffie-Hellman (QDH). This will be slightly different from how I ended the previous post, in that Alice will ask for permission to update her own keys, not Bob's. This is more efficient and deterministic, since Alice is the one controlling her own key generation.
+I decided to carefully write out my third and hopefully final attempt at the protocol I will be using for ChatScrypt, a version of the AIDH protocol with four keys. This will be slightly different from how I ended the previous post, in that Alice will ask for permission to update her own keys, not Bob's. This is more efficient and deterministic, since Alice is the one controlling her own key generation.
 
 <p>I will omit writing literal public keys <b>g^x mod N</b>, writing just "public key <b>x</b>" instead.
 
