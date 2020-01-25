@@ -7,7 +7,7 @@ date: 2020-01-24
 
 I decided to carefully write out my third and hopefully final attempt at the protocol I will be using for ChatScrypt, a version of the AIDH protocol with four keys. This will be slightly different from how I ended the previous post, in that Alice will ask for permission to update her own keys, not Bob's. This is more efficient and deterministic, since Alice is the one controlling her own key generation.
 
-<p>I will omit writing literal public keys <b>g^x mod N</b>, writing just "public key <b>x</b>" instead.
+<p>I will omit writing literal public keys <b>g^x mod N</b>, writing just "public key <b>x</b>" instead. Note that this is the <i>entire</i> protocol, right here, merging Signal's E3DH and Double Ratchet, simplifying both internally, and strictly improving security, as far as I can tell. Of course, these statements need some peer review.
 
 
 <h2>Alice's state</h2>
@@ -69,13 +69,10 @@ She delivers her message with the following attachments:
 
 
 
-<h2> Receiving a message</h2>
+<h2>Receiving a message</h2>
 
 If Bob is Active, he decrypts the message using <b>x', y, r</b>. If he is Passive, he uses <b>x, y*, r</b> (but if Bob recently became passive and Alice hasn't found out yet, he may need to revert to the other set as backup). 
 
-<p>If Bob is Passive and the message is Passive, someone's message was dropped. Bob can check his copy of Alice's public key against the included <b>x*</b>; if they do not match, he missed one of Alice's Active messages, and so pretends this is an Active message. If they do match, Bob is up to date so Alice is the one who did not receive one of his messages. At this point he can send her a Passive message and let her sort things out.
-  
-<p>There is some key deletion in the below; Bob needs to be sure it's safe to delete. Alice's Active message is a promise that she has processed Bob's key update request and will henceforth use his newer key. Further, it says she is ready to delete her current private key, but will keep using it until Bob replies to her. However, there are no promised about older, out of order messages from Alice, so here Bob needs to wait for all older messages from Alice before proceeding. (They will be passive, however, so it is also an option to not wait and just drop those messages. Another possibility would be to organize a separate storage of keys for this scenario, which is only populated in the pathological situation of unordered messages.)
 
 <ul>
 <li>Bob's <b>M</b> is unchanged. The integer list is updated. If the list is contiguous from the beginning, Bob can empty the list. 
@@ -84,6 +81,14 @@ If Bob is Active, he decrypts the message using <b>x', y, r</b>. If he is Passiv
 <li>If the message binary is Active, Bob's state binary becomes Active.
 </ul>
 
+
+<h2>Dropped messages</h2>
+
+Dropped messages are handled on the receiving side:
+
+<p>If Bob is Passive and the message is Passive, someone's message was dropped. Bob can check his copy of Alice's public key against the included <b>x*</b>; if they do not match, he missed one of Alice's Active messages, and so pretends this is an Active message. If they do match, Bob is up to date so Alice is the one who did not receive one of his messages. At this point he can send her a Passive message and let her sort things out.
+  
+<p>There is some key deletion in the receiving phase; Bob needs to be sure it's safe to delete. Alice's Active message is a promise that she has processed Bob's key update request and will henceforth use his newer key. Further, it says she is ready to delete her current private key, but will keep using it until Bob replies to her. However, there are no promised about older, out of order messages from Alice, so here Bob needs to wait for all older messages from Alice before proceeding. (They will be passive, however, so it is also an option to not wait and just drop those messages. Another possibility would be to organize a separate storage of keys for this scenario, which is only populated in the pathological situation of unordered messages.)
 
 
 <h2>Analysis</h2>
