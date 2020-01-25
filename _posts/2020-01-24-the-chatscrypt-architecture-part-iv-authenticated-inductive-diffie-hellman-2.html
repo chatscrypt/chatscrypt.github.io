@@ -75,7 +75,7 @@ If Bob is Active, he decrypts the message using <b>x', y, r</b>. If he is Passiv
 
 <p>If Bob is Passive and the message is Passive, someone's message was dropped. Bob can check his copy of Alice's public key against the included <b>x*</b>; if they do not match, he missed one of Alice's Active messages, and so pretends this is an Active message. If they do match, Bob is up to date so Alice is the one who did not receive one of his messages. At this point he can send her a Passive message and let her sort things out.
   
-<p>There is some key deletion in the below; Bob needs to be sure it's safe to delete. Alice's Active message is a promise that she has processed Bob's key update request and will henceforth use his newer key. Further, it says she is ready to delete her current private key, but will keep using it until Bob replies to her. However, there are no promised about older, out of order messages from Alice, so here Bob needs to wait for all older messages from Alice before proceeding. (They will be passive, however, so it is also an option to not wait and just drop those messages.)
+<p>There is some key deletion in the below; Bob needs to be sure it's safe to delete. Alice's Active message is a promise that she has processed Bob's key update request and will henceforth use his newer key. Further, it says she is ready to delete her current private key, but will keep using it until Bob replies to her. However, there are no promised about older, out of order messages from Alice, so here Bob needs to wait for all older messages from Alice before proceeding. (They will be passive, however, so it is also an option to not wait and just drop those messages. Another possibility would be to organize a separate storage of keys for this scenario, which is only populated in the pathological situation of unordered messages.)
 
 <ul>
 <li>Bob's <b>M</b> is unchanged. The integer list is updated. If the list is contiguous from the beginning, Bob can empty the list. 
@@ -91,3 +91,11 @@ If Bob is Active, he decrypts the message using <b>x', y, r</b>. If he is Passiv
 <p>As discussed, these two implementations are not better or worse than each other. They balance three things: 1. Authentication security (faster authentication key refresh), 2. Message security (faster key deletion), 3. Robustness against dropped messages. The previous implementation achieved 1 and 3, but was weak at 2, with potentially large numbers of keys stored. The implementation above achieves 2 and 3, but is slightly weaker at 1.
   
 <p>There is possibility of a third implementation, which achieves 1 and 2 but is weak at 3. Here, the implementation would refuse to let Bob speak until he has read Alice's most recent message. I'm very tempted suddenly to go with this one...
+  
+<p>Edit (1/24/2020): Let me clarify the weakness of this current implementation. 
+  
+<p>The issue is that when Alice sends an active message, she has fixed for the time being the next key that Bob will use to authenticate her. An attacker would know this, and get to work cracking this key. For as long as Bob does not reply to her, this key is valuable, opening the way to a man-in-the-middle attack. Alice has no way to repair this; sending passive messages does not update the candidate authentication key. 
+  
+<p>Note that in contrast, message in AIDH 1.0 are never passive: If Alice is worried that someone is trying to crack one of her keys, or has stolen it, she can rectify this without input from Bob: She can simply secure her computer and then send another message. If Bob sees it, the candidate authentication key is refreshed and the old key under attack is essentially discared. However, recall that the weakness with AIDH 1.0 was that key storage is unbounded.
+  
+<p>I should point out that the Signal protocol suffers from both these weaknesses: Unbounded key storage as well as "delayed authentication regeneration." The Signal protocol does have "perfect" robustness against dropped and misordered messages, however. 
