@@ -88,9 +88,9 @@ If Bob is Active, he decrypts the message using <b>x', y, r</b>. If he is Passiv
 
 <h2>Analysis</h2>
 
-<p>As discussed, these two implementations are not better or worse than each other. They balance three things: 1. Authentication security (faster authentication key refresh), 2. Message security (faster key deletion), 3. Robustness against dropped messages. The previous implementation achieved 1 and 3, but was weak at 2, with potentially large numbers of keys stored. The implementation above achieves 2 and 3, but is slightly weaker at 1.
+<p>As discussed, these two implementations are not better or worse than each other. They balance three things: 1. Authentication security (faster authentication key refresh), 2. Message security (faster key deletion), 3. Robustness against dropped messages. AIDH 1.0 achieved 1 and 3, but was weak at 2, with potentially large numbers of keys stored. AIDH 2.0 achieves 2 and 3, but is slightly weaker at 1.
   
-<p>There is possibility of a third implementation, which achieves 1 and 2 but is weak at 3. Here, the implementation would refuse to let Bob speak until he has read Alice's most recent message. I'm very tempted suddenly to go with this one...
+<p>There is possibility of a third implementation, which achieves 1 and 2 but is weak at 3. Here, the implementation would refuse to let Bob speak until he has read Alice's most recent message. This isn't great, because in the (rare) case of a dropped message, Bob could be shut out of communication until Alice messages again. I suppose the problem with this is that it's not user friendly: It's hard to understand why exactly Bob is shut out.
   
 <p>Edit (1/24/2020): Let me clarify the weakness of this current implementation. 
   
@@ -99,3 +99,5 @@ If Bob is Active, he decrypts the message using <b>x', y, r</b>. If he is Passiv
 <p>Note that in contrast, messages in AIDH 1.0 are never passive: If Alice is worried that someone is trying to crack one of her keys, or has stolen it, she can rectify this without input from Bob: She can simply secure her computer and then send another message. If Bob sees it, the candidate authentication key is refreshed and the old key under attack is essentially discarded. However, recall that the weakness with AIDH 1.0 was that key storage requirements are unbounded.
   
 <p>I should point out that the Signal protocol suffers from both these weaknesses: Unbounded key storage as well as "delayed authentication regeneration." It does have "perfect" robustness against dropped and misordered messages, but this last bit is somewhat of a wasted effort, because permitting dropped messages isn't really a desirable feature. I suppose with Signal, it might be, due to the intent to have "infinite scroll." But for ChatScrypt, it's very much optional.
+
+Edit (1/24/2020): Nevermind, AIDH 2.0 is strictly better than AIDH 1.0. It's key deletion that matters, not key creation. By keeping a large list of keys in AIDH 1.0, Alice is allowing any one of them to be used as authentication keys, weakening authentication.
