@@ -88,9 +88,9 @@ If Bob is Active, he decrypts the message using <b>x', y, r</b>. If he is Passiv
 
 <h2>Analysis</h2>
 
-<p>As discussed, these two implementations are not better or worse than each other. They balance three things: 1. Authentication security (faster authentication key refresh), 2. Message security (faster key deletion), 3. Robustness against dropped messages. AIDH 1.0 achieved 1 and 3, but was weak at 2, with potentially large numbers of keys stored. AIDH 2.0 achieves 2 and 3, but is slightly weaker at 1.
+<p>As discussed, these two implementations of AIDH are not better or worse than each other. They balance three things: 1. Authentication security (faster authentication key refresh), 2. message security (faster key deletion), and 3. robustness against dropped/misordered messages. AIDH 1.0 achieved 1 and 3, but was weak at 2, with potentially large numbers of keys stored. AIDH 2.0 achieves 2 and 3, but is slightly weaker at 1.
   
-<p>There is possibility of a third implementation, which achieves 1 and 2 but is weak at 3. Here, the implementation would refuse to let Bob speak until he has read Alice's most recent message. This isn't great, because in the (rare) case of a dropped message, Bob could be shut out of communication until Alice messages again. I suppose the problem with this is that it's not user friendly: It's hard to understand why exactly Bob is shut out.
+<p>There might be the possibility of a third implementation, which achieves 1 and 2 but is weak at 3. Here, the implementation would refuse to let Bob speak until he has read Alice's most recent message. This isn't great, as it's hard to prevent the very real case where Alice and Bob talk over each other. Then they both update their keys, and a fraction of a second later, they both receive messages they can't decrypt. Neither can authenticate the other, though in principle they can still communicate using the attached public keys in the messages.
   
 <p>Edit (1/24/2020): Let me clarify the weakness of this current implementation. 
   
