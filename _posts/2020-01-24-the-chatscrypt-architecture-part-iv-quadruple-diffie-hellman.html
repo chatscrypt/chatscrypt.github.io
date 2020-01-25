@@ -88,6 +88,6 @@ If Bob is Active, he decrypts the message using <b>x', y, r</b>. If he is Passiv
 
 <h2>Analysis</h2>
 
-<p>As discussed, these two implementations are not better or worse than each other. They balance three things: 1. Authentication security (faster authentication key refresh), 2. Message security (faster key deletion), 3. Robustness against dropped messages. The previous implementation achieved 1 and 3, but was weak at 2, with potentially large numbers of keys stored. The implementation I'm about to present achieves 2 and 3, but is slightly weaker at 1.
+<p>As discussed, these two implementations are not better or worse than each other. They balance three things: 1. Authentication security (faster authentication key refresh), 2. Message security (faster key deletion), 3. Robustness against dropped messages. The previous implementation achieved 1 and 3, but was weak at 2, with potentially large numbers of keys stored. The implementation above achieves 2 and 3, but is slightly weaker at 1.
   
 <p>There is possibility of a third implementation, which achieves 1 and 2 but is weak at 3. Here, the implementation would refuse to let Bob speak until he has read Alice's most recent message. I'm very tempted suddenly to go with this one...
