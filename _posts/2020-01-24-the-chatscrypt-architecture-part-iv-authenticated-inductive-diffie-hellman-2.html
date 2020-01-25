@@ -14,10 +14,10 @@ I decided to carefully write out my third and hopefully final attempt at the pro
 
 <p>Once the protocol is initiated, Alice will have the following state variables:
 <ul>
-<li>The number of messages <b>M</b> she has sent, and a list of integers enumerating which of Bob's messages she has received. (The contiguous part stemming from 0 may be deleted.) The list should typically be length 1.
-<li>Alice's current private key <b>x</b> and pending private key <b>x*</b>, waiting for confirmation from Bob.
-<li>Bob's current public key <b>y</b> and previous public key <b>y'</b>, in case Alice has processed the update to <b>y</b>, but Bob is unaware and still sending <b>y'</b> encrypted messages.
-<li>A binary that is either Active or Passive. If Active, this indicates that Alice's next message with have two effects: initiating a new key update request, and notifying Bob that his update request has been processed. Both will instigate updates in Bob's keys.
+<li>Alice's message counter <b>M</b>, and a list of integers enumerating which of Bob's messages she has received. (The contiguous part stemming from 0 may be deleted.) The list should typically be length 1.
+<li>Alice's current private key <b>x</b>, and pending private key <b>x*</b> waiting for confirmation from Bob.
+<li>Bob's current public key <b>y</b>, and previous public key <b>y'</b> in case Alice has processed the update to <b>y</b>, but Bob is unaware and still sending <b>y'</b> encrypted messages.
+<li>A binary that is either Active or Passive. If Active, Alice's next message with have two effects: initiating a new key update request, and notifying Bob that his update request has been processed. Both will instigate updates in Bob's keys.
 </ul>
 
 
@@ -32,7 +32,7 @@ Bob publishes to the server a new signed public key <b>y</b>. He refreshes this 
 
 Alice then initializes her state:
 <ul>
-<li>The number of messages <b>M</b> is set to 0, and an empty list of integers is initialized.
+<li>Message counter <b>M</b> is set to 0, and an empty list of integers is initialized.
 <li>Both private keys are set to <b>a</b>.
 <li>Both of Bob's public keys are set to <b>y</b>. 
 <li>Alice is Active.
@@ -61,8 +61,8 @@ She updates her state:
 She delivers her message with the following attachments:
 <ul>
 <li> (unencrypted) The public key <b>r</b>. 
-<li> (encrypted) The message number <b>M + 1</b>, and the number of messages Bob has sent Alice (0 if not contiguous).
-  <li> (encrypted) The Active/Passive binary is included here, along with public key <b>x*</b>.
+<li> (encrypted) The message number <b>M</b>.
+  <li> (encrypted) The Active/Passive binary the start of this sending event, along with public key <b>x*</b>.
 </ul>
 
 
@@ -75,9 +75,9 @@ If Bob is Active, he decrypts the message using <b>x', y, r</b>. If he is Passiv
 
 
 <ul>
-<li>Bob's <b>M</b> is unchanged. The integer list is updated. If the list is contiguous from the beginning, Bob can empty the list. 
+<li>Bob's <b>M</b> is unchanged. The integer list is updated. If the list is contiguous from the beginning, Bob can empty the list up to one element. 
 <li>If the message binary is Active, update private <b>y = y*</b>.
-<li>If the message binary is Active, update public <b>x' = x</b> (the right hand side is from Bob's state) and <b>x = x*</b> (the right hand side is from the message).
+<li>If the message binary is Active, update public <b>x' = x</b> and then <b>x = x*</b>.
 <li>If the message binary is Active, Bob's state binary becomes Active.
 </ul>
 
