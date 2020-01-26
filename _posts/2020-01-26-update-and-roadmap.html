@@ -1,0 +1,28 @@
+---
+layout: post
+title: "Update and Roadmap"
+comments: true
+date: 2020-01-26
+---
+
+I got tired of reading yesterday and took a bit of time to touch up the current implementation: Some minor features including:
+<ul>
+<li> Resizing and rearranging panels for space efficiency.
+<li> Clicking on names in contact list opens a new chat with the name preloaded as recipient.
+<li> Chat names are no longer name-[mysteriousinteger].
+<li> Timestamps are now hidden, instead appearing as alt-text.
+<li> An interesting feature I stole from Gchat: Highlighting text in a chat window behaves as you would expect, but clicking on the text focuses the cursor on the text entry box.
+</ul>
+
+This is all part of step one in the following rough order of tasks I have in mind:
+<ul>
+<li> Usability, enough to keep me sane as I debug (almost there).
+<li> Encryption.
+<li> Message storage (in the cloud, encrypted).
+<li> Server security (rate limiting, XSS attacks, account recovery).
+<li> Search.
+<li> Display style and customization.
+<li> Voice, image, video...emojis?
+</ul>
+
+At this stage, all are fairly straightforward - like filling in a coloring book, as I say - except for search, and possibly account recovery if I can come up with some new ideas there. After message storage, this begins to become useful.
