@@ -38,12 +38,7 @@ I came up with the Authenticated Inductive Diffie-Hellman (AIDH) protocol as I f
 <h2>Initialization</h2>
 Bob publishes to the server a new signed public key <b>g^y mod N</b>. He refreshes this key every time someone initiates a new correspondence with him. Alice publishes to the server an unsigned but long-term public key <b>g^a mod N</b>.
 
-<p>When Alice wants to initiate a correspondence with Bob, she fetches Bob's signed public key, verifies the signature, and sends some metadata to Bob using the shared Diffie-Hellman encryption key
-<div class="media">
-<b>g^(ay) mod N.</b>
-</div>
-
-Alice then initalizes her state:
+<p>When Alice wants to initiate a correspondence with Bob, she fetches Bob's signed public key, verifies the signature, and initalizes her state:
 <ul>
 <li>She creates an empty list of integers.
 <li>Alice's private key list is initialized with <b>x = a</b>.
