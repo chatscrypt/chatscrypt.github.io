@@ -49,21 +49,28 @@ She increments <b>M = M + 1</b> and delivers her message with the following atta
 
 <h2>Receiving a message</h2>
 
-If the incoming <b>x*</b> doesn't match <b>x</b>, Bob decrypts using <b>x, y*, r</b> and updates keys:
+If the incoming <b>x*</b> doesn't match Bob's <b>x</b>, Bob decrypts using <b>x, y*, r</b> and updates keys:
 <ul>
 <li>Update private <b>y = y*</b> and save a new Diffie-Hellman key pair to <b>y*</b>. Ensure that the new key is different from the old one (astronomically unlikely, but still).
-<li>Update public <b>x' = x</b> and then <b>x = x*</b>.
+  <li>Update public <b>x' = x</b> and then <b>x = x*</b>.
 </ul>
 If the incoming <b>x* = x</b>, Bob decrypts the message using <b>x', y, r</b>. In all cases, the integer list is updated. If the list is contiguous from the beginning, Bob can empty the list up to one element. 
 
 
-<h2>Dropped messages</h2>
+<h2>Dropped and delayed messages</h2>
 
-Dropped messages are handled on the receiving side:
+There is some key deletion in the receiving phase; Bob needs to be sure it's safe to delete. Some terminology: A message which instigates key updates will be called an active message. 
+
+<p>First let's verify that the decryption always works on active message receipt - where Bob uses his <b>x, y*, r</b> to decrypt, while Alice encrypted with <b>x, y, r</b>. Alice must have generated the included <b>x*</b> at some point; she generated it on an active message received from Bob, which she successfully decrypted. This successful (active) decrypt means her <b>x*</b> at that time matched Bob's <b>x</b>. She then pushed her <b>x*</b> to her <b>x</b>; thus Alice and Bob's <b>x</b>'s now match. Similarly, she pushed Bob's new <b>y*</b> to her <b>y</b>, so they match. Thus, the active decryption works - contingent on the fact that Bob did not change his keys in the meantime. 
   
-<p>There is some key deletion in the receiving phase; Bob needs to be sure it's safe to delete. Alice's Active message is a promise that she has processed Bob's key update request and will henceforth use his newer key. Further, it says she is ready to delete her current private key, but will keep using it until Bob replies to her. However, there are no promises about older, out of order messages from Alice, so here Bob needs to wait for all older messages from Alice before proceeding. (They will be passive, however, so it is also an option to not wait and just drop those messages. Another possibility would be to organize a separate storage of keys for this scenario, which is only populated in the pathological situation of unordered messages.)
-
-<p>If Bob is Passive, up to date, and the received message is still Passive, someone's message was dropped or out of order. Bob can check his copy of Alice's public key against the included <b>x*</b>; if they do not match, he missed one of Alice's Active messages, and so pretends this is an Active message. If they do match, Bob is up to date so Alice is the one who did not receive one of his messages. At this point he can send her a Passive message and let her sort things out.
+<p>How could Bob have changed his keys? Only if Alice launched off a speedy message after the current one, which beat the message in question. However, note that the newer message would have the same key properties, pushing the ratchet forward correctly, and preserving communications. Thus, we have some options:
+  <ul>
+<li>Bob can wait, proceeding only if messages are contiguous. This could be a problem for lost messages, as he would wait indefinitely.
+<li>Bob can simply throw away slow messages (the decryption would fail to yield a recognizable username).
+<li>Bob can also save some reasonable fixed number of old keys. Lost messages wouldn't hold up communications, and heavily delayed messages can be tossed, being as good as lost anyway.
+</ul>
+  
+<p>Passive messages arriving between their proper active message, can also always be decrypted. This is fairly easy to see. They similarly may be lost or delayed. 
 
 <h2>Analysis</h2>
 
