@@ -49,7 +49,7 @@ She increments <b>M = M + 1</b> and delivers her message with the following atta
 
 <h2>Receiving a message</h2>
 
-If the incoming <b>x*</b> doesn't match Bob's <b>x</b>, Bob decrypts using <b>x, y*, r</b> and updates keys:
+If the incoming <b>x*</b> doesn't match Bob's <b>x</b>, Bob decrypts using <b>x, y*, r</b> and updates keys (actually, he tries decrypting blindly; success implies the inequality, as we discuss later):
 <ul>
 <li>Update private <b>y = y*</b> and save a new Diffie-Hellman key pair to <b>y*</b>. Ensure that the new key is different from the old one (astronomically unlikely, but still).
   <li>Update public <b>x' = x</b> and then <b>x = x*</b>.
