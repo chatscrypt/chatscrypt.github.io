@@ -14,11 +14,9 @@ I decided to carefully write out my third and hopefully final attempt at the pro
 
 <p>Once the protocol is initiated, Alice will have the following state variables:
 <ul>
-<li>Alice's message counter <b>M</b>, and a list of integers enumerating which of Bob's messages she has received. (The contiguous part stemming from 0 may be deleted.) The list should typically be length 1.
 <li>Alice's current private key <b>x</b>, and pending private key <b>x*</b> waiting for confirmation from Bob.
 <li>Bob's current public key <b>y</b>, and previous public key <b>y'</b> in case Alice has processed the update to <b>y</b>, but Bob is unaware and still sending <b>y'</b> encrypted messages.
 </ul>
-
 
 
 <h2>Initialization</h2>
@@ -26,7 +24,6 @@ Alice publishes to the server an unsigned but long-term public key <b>a</b>. Bob
 
 <p>When Alice wants to initiate a correspondence with Bob, she fetches Bob's signed public key, verifies the signature, and initializes her state:
 <ul>
-<li>Message counter <b>M</b> is set to 0, and an empty list of integers is initialized.
 <li>Alice sets <b>x = a</b> and saves a new Diffie-Hellman key pair to <b>x*</b>. She ensures that the new key is different from the old one (astronomically unlikely, but still).
 <li>Both of Bob's public keys are set to <b>y</b>. 
 </ul>
@@ -41,36 +38,36 @@ Alice creates a new Diffie-Hellman key pair with private key <b>r</b> and then e
 <b>g^(xy) mod N</b> and <b>g^(ry) mod N</b>.
 </div>
 
-She increments <b>M = M + 1</b> and delivers her message with the following attachments:
+She delivers her message with the following attachments:
 <ul>
 <li> (unencrypted) The public key <b>r</b>. 
-<li> (encrypted) The message number <b>M</b> and public key <b>x*</b> (which may be kept entirely private for extra security).
+<li> (encrypted) The public key <b>x*</b> (which may be kept entirely private for extra security).
 </ul>
 
 <h2>Receiving a message</h2>
 
 If the incoming <b>x*</b> doesn't match Bob's <b>x</b>, Bob decrypts using <b>x, y*, r</b> and updates keys (actually, he tries decrypting blindly; success implies the inequality, as we discuss later):
 <ul>
-<li>Update private <b>y = y*</b> and save a new Diffie-Hellman key pair to <b>y*</b>. Ensure that the new key is different from the old one (astronomically unlikely, but still).
+<li>Update private <b>y = y*</b> and save a new Diffie-Hellman key pair to <b>y*</b>. Ensure that the new key is different from the old one (astronomically unlikely).
   <li>Update public <b>x' = x</b> and then <b>x = x*</b>.
 </ul>
-If the incoming <b>x* = x</b>, Bob decrypts the message using <b>x', y, r</b>. In all cases, the integer list is updated. If the list is contiguous from the beginning, Bob can empty the list up to one element. 
+If the incoming <b>x* = x</b>, Bob decrypts the message using <b>x', y, r</b> and does not update keys.
 
 
-<h2>Dropped and delayed messages</h2>
+<h2>Dropped and misordered messages</h2>
 
 There is some key deletion in the receiving phase; Bob needs to be sure it's safe to delete. Some terminology: A message which instigates key updates will be called an active message. 
 
 <p>First let's verify that the decryption always works on active message receipt - where Bob uses his <b>x, y*, r</b> to decrypt, while Alice encrypted with <b>x, y, r</b>. Alice must have generated the included <b>x*</b> at some point; she generated it on an active message received from Bob, which she successfully decrypted. This successful (active) decrypt means her <b>x*</b> at that time matched Bob's <b>x</b>. She then pushed her <b>x*</b> to her <b>x</b>; thus Alice and Bob's <b>x</b>'s now match. Similarly, she pushed Bob's new <b>y*</b> to her <b>y</b>, so they match. Thus, the active decryption works - contingent on the fact that Bob did not change his keys in the meantime. 
   
-<p>How could Bob have changed his keys? Only if Alice launched off a speedy message after the current one, arriving earlier. However, note that the newer message would have the same key properties, pushing the ratchet forward correctly, and preserving communications. Thus, we have some options:
+<p>How could Bob have changed his keys? Only if Alice launched off a newer but speedier message arriving before the current one (in other words, a misorder). However, note that the newer message would have the same key properties, pushing the ratchet forward correctly, and preserving communications. Thus, we have some options:
   <ul>
-<li>Bob can simply throw away slow messages (later, the decryption would fail to yield a recognizable username).
-<li>Bob can wait, proceeding only if messages are contiguous. This could be a problem for lost messages, as he would wait indefinitely.
-<li>Bob can also save some reasonable fixed number of old keys. Lost messages wouldn't hold up communications, and heavily delayed messages can be tossed, being as good as lost anyway.
+<li>Bob can simply discard slow messages (the decryption would fail to yield a recognizable username).
+<li>Bob can wait, proceeding only if messages are contiguous (Alice and Bob could each attach a counter of their own sent messages). This could be a problem for lost messages, as he would end up waiting indefinitely.
+<li>Bob can also save some reasonable fixed number of old keys. Lost messages wouldn't hold up communications, and heavily delayed (ie. misordered) messages can be tossed, being as good as lost anyway.
 </ul>
   
-<p>Passive messages arriving between their proper active message, can also always be decrypted. This is fairly easy to see. They similarly may be lost or delayed. 
+<p>Passive messages arriving between their proper active messages, can also always be decrypted. This is fairly easy to see. They similarly may be lost or misordered.
 
 <h2>Analysis</h2>
 
@@ -93,6 +90,8 @@ There is some key deletion in the receiving phase; Bob needs to be sure it's saf
 
   
   
-<p>Edit (1/29/2020): I simplified the protocol quite a bit, and improved security properties. In fact, I think I've created something interesting: If Bob's device is compromised, and the <b>y</b> keys are all stolen from a period of time that doesn't date to the beginning of the communication, the messages are still secure! This is because the ratcheting <b>x</b>'s and <b>y</b>'s are entirely private, except at the initial exchange, where <b>x = a</b> and <b>y</b> have published public keys. Thus, AIDH 2.0 enjoys what one might call <i>two point</i> secrecy: An attacker would need to steal secrets belonging to <i>both</i> Alice and Bob to succeed, or Bob now and Bob past. 
+<p>Edit (1/29/2020): I simplified the protocol quite a bit, and improved security properties. I noticed something interesting: If Bob's device is compromised, and the <b>y</b> keys are all stolen from a period of time that doesn't date to the beginning of the communication, the messages are still secure. This is because the ratcheting <b>x</b>'s and <b>y</b>'s are entirely private, except at the initial exchange, where <b>x = a</b> and <b>y</b> have published public keys. Thus, AIDH 2.0 enjoys what one might call <i>two point</i> secrecy: An attacker would need to steal secrets belonging to <i>both</i> Alice and Bob to succeed, or Bob now and Bob past. 
   
 <p>Admittedly, Alice is sending Bob her public keys <b>x</b> constantly. But, for instance, in the case of spontaneous failure or compromise of Bob's random number generator, the <b>x</b>'s could conceivably remain entirely private, along with the ciphertexts.
+  
+<p>Edit (1/30/2020): I've also noticed that there is the matter of knowing which key to use to decrypt a received message, if the sender is hidden. Publicly attached with the message could be a hash of the public key to use.
