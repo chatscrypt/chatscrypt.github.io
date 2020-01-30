@@ -27,11 +27,11 @@ Alice publishes to the server an unsigned but long-term public key <b>a</b>. Bob
 <p>When Alice wants to initiate a correspondence with Bob, she fetches Bob's signed public key, verifies the signature, and initializes her state:
 <ul>
 <li>Message counter <b>M</b> is set to 0, and an empty list of integers is initialized.
-<li>Alice sets <b>x = a</b> and saves a new Diffie-Hellman key pair to <b>x*</b>. Ensure that the new key is different from the old one (astronomically unlikely, but still).
+<li>Alice sets <b>x = a</b> and saves a new Diffie-Hellman key pair to <b>x*</b>. She ensures that the new key is different from the old one (astronomically unlikely, but still).
 <li>Both of Bob's public keys are set to <b>y</b>. 
 </ul>
 
-<p>Bob is, with both private keys set to <b>y</b> and public keys set to <b>a</b>.
+<p>Bob is similar, but with both private keys set to <b>y</b> and public keys set to <b>a</b>.
 
 
 
@@ -41,17 +41,11 @@ Alice creates a new Diffie-Hellman key pair with private key <b>r</b> and then e
 <b>g^(xy) mod N</b> and <b>g^(ry) mod N</b>.
 </div>
 
-She delivers her message with the following attachments:
+She increments <b>M = M + 1</b> and delivers her message with the following attachments:
 <ul>
 <li> (unencrypted) The public keys <b>r</b> and <b>x*</b>. 
-<li> (encrypted) The message number <b>M + 1</b>.
-<li> (encrypted) Alice's current Active/Passive binary.
+<li> (encrypted) The message number <b>M</b>.
 </ul>
-
-She updates her state by incrementing <b>M = M + 1</b> and setting her status to Passive.
-
-
-
 
 <h2>Receiving a message</h2>
 
