@@ -17,7 +17,6 @@ I decided to carefully write out my third and hopefully final attempt at the pro
 <li>Alice's message counter <b>M</b>, and a list of integers enumerating which of Bob's messages she has received. (The contiguous part stemming from 0 may be deleted.) The list should typically be length 1.
 <li>Alice's current private key <b>x</b>, and pending private key <b>x*</b> waiting for confirmation from Bob.
 <li>Bob's current public key <b>y</b>, and previous public key <b>y'</b> in case Alice has processed the update to <b>y</b>, but Bob is unaware and still sending <b>y'</b> encrypted messages.
-<li>A binary that is either Active or Passive. If Active, Alice's next message with have two effects: initiating a new key update request, and notifying Bob that his update request has been processed. Both will instigate updates in Bob's keys.
 </ul>
 
 
