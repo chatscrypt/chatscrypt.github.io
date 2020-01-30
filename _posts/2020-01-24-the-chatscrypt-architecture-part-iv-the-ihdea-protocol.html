@@ -1,11 +1,11 @@
 ---
 layout: post
-title: "The ChatScrypt Architecture Part IV: Authenticated Inductive Diffie-Hellman 2.0"
+title: "The ChatScrypt Architecture Part IV: The Idhea Protocol"
 comments: true
 date: 2020-01-24
 ---
 
-I decided to carefully write out my third and hopefully final attempt at the protocol I will be using for ChatScrypt, a version of the AIDH protocol with four keys. This will be slightly different from how I ended the previous post, in that Alice will ask for permission to update her own keys, not Bob's. This is more efficient and deterministic, since Alice is the one controlling her own key generation.
+I decided to carefully write out my third and hopefully final attempt at the protocol I will be using for ChatScrypt, a version of the AIDH protocol with four keys. I've decided to call it the idhea protocol (inductive Diffie-Hellman, ephemeral and authenticated). This will be slightly different from how I ended the previous post, in that Alice will ask for permission to update her own keys, not Bob's. This is more efficient and deterministic, since Alice is the one controlling her own key generation.
 
 <p>I will omit writing literal public keys <b>g^x mod N</b>, writing just "public key <b>x</b>" instead. Note that this is the <i>entire</i> protocol, right here, merging Signal's E3DH and Double Ratchet, simplifying both internally, and strictly improving security, as far as I can tell. Of course, these statements need some peer review.
 
@@ -72,7 +72,7 @@ There is some key deletion in the receiving phase; Bob needs to be sure it's saf
 <h2>Analysis</h2>
 
 
-<p>As discussed, these two implementations of AIDH are not better or worse than each other. They balance three things: 1. Authentication security (faster authentication key refresh), 2. message security (faster key deletion), and 3. robustness against dropped/misordered messages. AIDH 1.0 achieved 1 and 3, but was weak at 2, with potentially large numbers of keys stored. AIDH 2.0 achieves 2 and 3, but is slightly weaker at 1.
+<p>As discussed, these two implementations of AIDH are not better or worse than each other. They balance three things: 1. Authentication security (faster authentication key refresh), 2. message security (faster key deletion), and 3. robustness against dropped/misordered messages. AIDH achieved 1 and 3, but was weak at 2, with potentially large numbers of keys stored. Idhea achieves 2 and 3, but is slightly weaker at 1.
   
 <p>There might be the possibility of a third implementation, which achieves 1 and 2 but is weak at 3. Here, the implementation would refuse to let Bob speak until he has read Alice's most recent message. This isn't great, as it's hard to prevent the very real case where Alice and Bob talk over each other. Then they both update their keys, and a fraction of a second later, they both receive messages they can't decrypt. Neither can authenticate the other, though in principle they can still communicate using the attached public keys in the messages.
   
@@ -80,17 +80,17 @@ There is some key deletion in the receiving phase; Bob needs to be sure it's saf
   
 <p>The issue is that when Alice sends an active message, she has fixed for the time being the next key that Bob will use to authenticate her. An attacker wanting to masquerade as Alice would know this, and get to work cracking this key. For as long as Bob does not reply to her, this key is valuable, opening the way to a man-in-the-middle attack. Alice has no way to repair this; sending passive messages does not update her authentication key. 
   
-<p>Note that in contrast, messages in AIDH 1.0 are never passive: If Alice is worried that someone is trying to crack one of her keys, or has stolen it, she can rectify this without input from Bob: She can simply secure her computer and then send another message. If Bob sees it, the candidate authentication key is refreshed and the old key under attack is essentially discarded. However, recall that the weakness with AIDH 1.0 was that key storage requirements are unbounded.
+<p>Note that in contrast, messages in AIDH are never passive: If Alice is worried that someone is trying to crack one of her keys, or has stolen it, she can rectify this without input from Bob: She can simply secure her computer and then send another message. If Bob sees it, the candidate authentication key is refreshed and the old key under attack is essentially discarded. However, recall that the weakness with AIDH was that key storage requirements are unbounded.
   
 <p>I should point out that the Signal protocol suffers from both these weaknesses: Unbounded key storage as well as "delayed authentication key regeneration." It does have "perfect" robustness against dropped and misordered messages, but this last bit is somewhat of a wasted effort, because permitting dropped messages isn't really a desirable feature. I suppose with Signal, it might be, due to the intent to have "infinite scroll." But for ChatScrypt, it's very much optional.
 
-<p>Edit (1/24/2020): Nevermind, AIDH 2.0 is better than AIDH 1.0 in the authentication regard as well. It's key deletion that matters, not key creation. By keeping a large list of keys in AIDH 1.0, Alice is allowing any one of them to "represent her"; an attacker needn't use the newest one, as I mistakenly thought above. The only advantage comes in the fact that Alice can choose to use Bob's newest key to encrypt. 
+<p>Edit (1/24/2020): Nevermind, idhea is better than AIDH in the authentication regard as well. It's key deletion that matters, not key creation. By keeping a large list of keys in AIDH, Alice is allowing any one of them to "represent her"; an attacker needn't use the newest one, as I mistakenly thought above. The only advantage comes in the fact that Alice can choose to use Bob's newest key to encrypt. 
 
-<p>So is there any reason to use AIDH 1.0? Kind of; in 2.0, Alice is forced to use Bob's "oldest" and least secure encryption key. But in a way, message security is not a concern with these ratcheting forward/future secret protocols: This is the whole point. The biggest risk is a man-in-the-middle attack. And in that sense, it seems that 2.0 is just marginally better (as discussed, there are strictly fewer keys which authenticate Alice at any time). So it looks like this ends the discussion on the AIDH protocol! Next, Part V, I'll discuss ambient security considerations, including primitives and key storage.
+<p>So is there any reason to use AIDH? Kind of; in idhea, Alice is forced to use Bob's "oldest" and least secure encryption key. But in a way, message security is not a concern with these ratcheting forward/future secret protocols: This is the whole point. The biggest risk is a man-in-the-middle attack. And in that sense, it seems that 2.0 is just marginally better (as discussed, there are strictly fewer keys which authenticate Alice at any time). So it looks like this ends the discussion on the idhea protocol! Next, Part V, I'll discuss ambient security considerations, including primitives and key storage.
 
   
   
-<p>Edit (1/29/2020): I simplified the protocol quite a bit, and improved security properties. I noticed something interesting: If Bob's device is compromised, and the <b>y</b> keys are all stolen from a period of time that doesn't date to the beginning of the communication, the messages are still secure. This is because the ratcheting <b>x</b>'s and <b>y</b>'s are entirely private, except at the initial exchange, where <b>x = a</b> and <b>y</b> have published public keys. Thus, AIDH 2.0 enjoys what one might call <i>two point</i> secrecy: An attacker would need to steal secrets belonging to <i>both</i> Alice and Bob to succeed, or Bob now and Bob past. 
+<p>Edit (1/29/2020): I simplified the protocol quite a bit, and improved security properties. I noticed something interesting: If Bob's device is compromised, and the <b>y</b> keys are all stolen from a period of time that doesn't date to the beginning of the communication, the messages are still secure. This is because the ratcheting <b>x</b>'s and <b>y</b>'s are entirely private, except at the initial exchange, where <b>x = a</b> and <b>y</b> have published public keys. Thus, idhea enjoys what one might call <i>two point</i> secrecy: An attacker would need to steal secrets belonging to <i>both</i> Alice and Bob to succeed, or Bob now and Bob past. 
   
 <p>Admittedly, Alice is sending Bob her public keys <b>x</b> constantly. But, for instance, in the case of spontaneous failure or compromise of Bob's random number generator, the <b>x</b>'s could conceivably remain entirely private, along with the ciphertexts.
   
