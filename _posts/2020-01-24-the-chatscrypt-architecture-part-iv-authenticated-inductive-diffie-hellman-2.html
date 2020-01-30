@@ -28,12 +28,11 @@ Alice publishes to the server an unsigned but long-term public key <b>a</b>. Bob
 <p>When Alice wants to initiate a correspondence with Bob, she fetches Bob's signed public key, verifies the signature, and initializes her state:
 <ul>
 <li>Message counter <b>M</b> is set to 0, and an empty list of integers is initialized.
-<li>Both private keys are set to <b>a</b>.
+<li>Alice sets <b>x = a</b> and saves a new Diffie-Hellman key pair to <b>x*</b>. Ensure that the new key is different from the old one (astronomically unlikely, but still).
 <li>Both of Bob's public keys are set to <b>y</b>. 
-<li>Alice starts as Active.
 </ul>
 
-<p>Bob is similarly initialized, with private keys set to <b>y</b> and public keys set to <b>a</b>. Bob starts as Passive.
+<p>Bob is, with both private keys set to <b>y</b> and public keys set to <b>a</b>.
 
 
 
@@ -43,48 +42,35 @@ Alice creates a new Diffie-Hellman key pair with private key <b>r</b> and then e
 <b>g^(xy) mod N</b> and <b>g^(ry) mod N</b>.
 </div>
 
-
-She updates her state:
-<ul>
-<li>Increment <b>M = M + 1</b>. The integer list is unchanged.
-<li>If Active, update private <b>x* = r</b>.
-<li>Both of Bob's public keys are unchanged.
-<li>Set to Passive.
-</ul>
-
-
 She delivers her message with the following attachments:
 <ul>
-<li> (unencrypted) The public key <b>r</b>. 
-<li> (encrypted) The message number <b>M</b>.
-  <li> (encrypted) The Active/Passive binary the start of this sending event, along with public key <b>x*</b>.
+<li> (unencrypted) The public keys <b>r</b> and <b>x*</b>. 
+<li> (encrypted) The message number <b>M + 1</b>.
+<li> (encrypted) Alice's current Active/Passive binary.
 </ul>
 
+She updates her state by incrementing <b>M = M + 1</b> and setting her status to Passive.
 
 
 
 
 <h2>Receiving a message</h2>
 
-If Bob is Active, he decrypts the message using <b>x', y, r</b>. If he is Passive, he uses <b>x, y*, r</b> (but if Bob recently became passive and Alice hasn't found out yet, he may need to revert to the other set as backup). 
-
-
+If the incoming <b>x*</b> doesn't match <b>x</b>, Bob decrypts using <b>x, y*, r</b> and updates keys:
 <ul>
-<li>Bob's <b>M</b> is unchanged. The integer list is updated. If the list is contiguous from the beginning, Bob can empty the list up to one element. 
-<li>If the message binary is Active, update private <b>y = y*</b>.
-<li>If the message binary is Active, update public <b>x' = x</b> and then <b>x = x*</b>.
-<li>If the message binary is Active, Bob's state binary becomes Active.
+<li>Update private <b>y = y*</b> and save a new Diffie-Hellman key pair to <b>y*</b>. Ensure that the new key is different from the old one (astronomically unlikely, but still).
+<li>Update public <b>x' = x</b> and then <b>x = x*</b>.
 </ul>
+If the incoming <b>x* = x</b>, Bob decrypts the message using <b>x', y, r</b>. In all cases, the integer list is updated. If the list is contiguous from the beginning, Bob can empty the list up to one element. 
 
 
 <h2>Dropped messages</h2>
 
 Dropped messages are handled on the receiving side:
-
-<p>If Bob is Passive and the message is Passive, someone's message was dropped. Bob can check his copy of Alice's public key against the included <b>x*</b>; if they do not match, he missed one of Alice's Active messages, and so pretends this is an Active message. If they do match, Bob is up to date so Alice is the one who did not receive one of his messages. At this point he can send her a Passive message and let her sort things out.
   
-<p>There is some key deletion in the receiving phase; Bob needs to be sure it's safe to delete. Alice's Active message is a promise that she has processed Bob's key update request and will henceforth use his newer key. Further, it says she is ready to delete her current private key, but will keep using it until Bob replies to her. However, there are no promised about older, out of order messages from Alice, so here Bob needs to wait for all older messages from Alice before proceeding. (They will be passive, however, so it is also an option to not wait and just drop those messages. Another possibility would be to organize a separate storage of keys for this scenario, which is only populated in the pathological situation of unordered messages.)
+<p>There is some key deletion in the receiving phase; Bob needs to be sure it's safe to delete. Alice's Active message is a promise that she has processed Bob's key update request and will henceforth use his newer key. Further, it says she is ready to delete her current private key, but will keep using it until Bob replies to her. However, there are no promises about older, out of order messages from Alice, so here Bob needs to wait for all older messages from Alice before proceeding. (They will be passive, however, so it is also an option to not wait and just drop those messages. Another possibility would be to organize a separate storage of keys for this scenario, which is only populated in the pathological situation of unordered messages.)
 
+<p>If Bob is Passive, up to date, and the received message is still Passive, someone's message was dropped or out of order. Bob can check his copy of Alice's public key against the included <b>x*</b>; if they do not match, he missed one of Alice's Active messages, and so pretends this is an Active message. If they do match, Bob is up to date so Alice is the one who did not receive one of his messages. At this point he can send her a Passive message and let her sort things out.
 
 <h2>Analysis</h2>
 
