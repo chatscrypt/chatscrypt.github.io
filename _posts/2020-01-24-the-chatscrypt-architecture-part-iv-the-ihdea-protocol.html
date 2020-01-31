@@ -60,11 +60,11 @@ There is some key deletion in the receiving phase; Bob needs to be sure it's saf
 
 <p>First let's verify that the decryption always works on active message receipt - where Bob uses his <b>x, y*, r</b> to decrypt, while Alice encrypted with <b>x, y, r</b>. Alice must have generated the included <b>x*</b> at some point; she generated it on an active message received from Bob, which she successfully decrypted. This successful (active) decrypt means her <b>x*</b> at that time matched Bob's <b>x</b>. She then pushed her <b>x*</b> to her <b>x</b>; thus Alice and Bob's <b>x</b>'s now match. Similarly, she pushed Bob's new <b>y*</b> to her <b>y</b>, so they match. Thus, the active decryption works - contingent on the fact that Bob did not change his keys in the meantime. 
   
-<p>How could Bob have changed his keys? Only if Alice launched off a newer but speedier message arriving before the current one (in other words, a misorder). However, note that the newer message would have the same key properties, pushing the ratchet forward correctly, and preserving communications. Thus, we have some options:
+<p>How could Bob have changed his keys? Only if Alice launched off a newer but speedier message arriving before the current one (in other words, a misorder)...but actually this would just turn the current message into a passive but decryptable one, which is fine. So this misorder would only cause failure if Alice launches TWO speedier messages, separated by one of Bob's replies inbetween! Further, note that even if this message were so heavily delayed or lost, the ratchet proceeds correctly, with no effect on continued communications. Thus, we have some options:
   <ul>
-<li>Bob can simply discard slow messages (the decryption would fail to yield a recognizable username).
+<li>Bob can simply discard delayed messages (the decryption would fail to yield a recognizable username).
 <li>Bob can wait, proceeding only if messages are contiguous (Alice and Bob could each attach a counter of their own sent messages). This could be a problem for lost messages, as he would end up waiting indefinitely.
-<li>Bob can also save some reasonable fixed number of old keys. Lost messages wouldn't hold up communications, and heavily delayed (ie. misordered) messages can be tossed, being as good as lost anyway.
+<li>Bob can also save some reasonable fixed number of old keys. Lost messages wouldn't hold up communications, and heavily delayed (ie. misordered) messages can be tossed, being as good as lost anyway. (The Signal protocol seems to use this strategy, but only with "one backup DH key.")
 </ul>
   
 <p>Passive messages arriving between their proper active messages, can also always be decrypted. This is fairly easy to see. They similarly may be lost or misordered.
