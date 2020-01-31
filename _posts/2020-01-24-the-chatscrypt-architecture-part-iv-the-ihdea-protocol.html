@@ -64,8 +64,9 @@ There is some key deletion in the receiving phase; Bob needs to be sure it's saf
   <ul>
 <li>Bob can simply discard delayed messages (the decryption would fail to yield a recognizable username).
 <li>Bob can wait, proceeding only if messages are contiguous (Alice and Bob could each attach a counter of their own sent messages). This could be a problem for lost messages, as he would end up waiting indefinitely.
-<li>Bob can also save some reasonable fixed number of old keys. Lost messages wouldn't hold up communications, and heavily delayed (ie. misordered) messages can be tossed, being as good as lost anyway. (The Signal protocol seems to use this strategy, but only with "one backup DH key.")
+<li>Bob can also save some reasonable fixed number of old keys. Lost messages wouldn't hold up communications, and heavily delayed (ie. misordered) messages can be tossed, being as good as lost anyway.
 </ul>
+In a vague sense, the Signal protocol uses the third strategy, but only with "one backup DH key." One backup key is already automatic for IDHEA, as discussed above, so ChatScrypt will likely use the first "lazy" approach.
   
 <p>Passive messages arriving between their proper active messages, can also always be decrypted. This is fairly easy to see. They similarly may be lost or misordered.
 
