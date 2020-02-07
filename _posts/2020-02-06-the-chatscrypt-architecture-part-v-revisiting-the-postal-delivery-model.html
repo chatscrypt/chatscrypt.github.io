@@ -100,6 +100,8 @@ Strengths of this protocol, all improvements over the Signal protocol, in increa
   
 <li>There are only two cryptographic primitives: DH and AES.
   
+<li>Accordingly, there are no digital signatures. I haven't analyzed this but I'm sure there is some improvement in deniability as a result.
+  
 <li>There are no long term keys of any kind, so even authentication enjoys a kind of forward and future secrecy.
   
 <li>Alice may remain entirely anonymous to the server. Every time she sends a message to Bob, there is no need for the server to know who she is. Further, this "Postal Diffie-Hellman" is carefully crafted so that Bob's insta-reply is directed to the server, not Alice (which would immediately give her away).
