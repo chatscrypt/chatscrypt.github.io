@@ -71,7 +71,7 @@ Bob then sends a message to the server with his new <b>y*</b>, encrypted with <b
 </ul>
 Finally, she sends her message, encrypted with the shared encryption key <b>g^(xy) mod N</b>, including within the encrypted message the public key <b>x*</b>.
 
-<p>If the first decryption attempt fails, she decrypts the message using <b>y', x</b> and does not update keys. Instead, she creates a new Diffie-Hellman key pair with private key <b>r</b> and then encrypts her message using the shared Diffie-Hellman encryption keys 
+<p>If the first decryption attempt fails, she does not update keys. Instead, she creates a new Diffie-Hellman key pair with private key <b>r</b> and then encrypts her message using the shared Diffie-Hellman encryption keys 
 <div class="media">
 <b>g^(xy) mod N</b> and <b>g^(ry) mod N</b>.
 </div>
@@ -82,14 +82,14 @@ As before, she includes within the encrypted message the public key <b>x*</b>, b
 
 <h2>Receiving a message</h2>
 
-Bob decrypts using <b>x, y*</b> and if successful, updates keys:
+If there is no attachment, Bob decrypts using <b>x, y*</b> and updates keys:
 <ul>
 <li>He updates private <b>y = y*</b> and saves a new Diffie-Hellman key pair to <b>y*</b>.
 <li>He updates public <b>x' = x</b> and then <b>x = x*</b>.
 </ul>
 He sends a message to the server with his new <b>y*</b>, encrypted with <b>g^(xy) mod N</b>.
 
-<p>If the first decryption attempt fails, he decrypts the message using <b>x', y, r</b> and does not update keys. He sends a message to the server with the old <b>y*</b>, encrypted with <b>g^(xy) mod N</b>.
+<p>If there is an attached public key <b>r</b>, he decrypts the message using <b>x', y, r</b> and does not update keys. He sends a message to the server with the old <b>y*</b>, encrypted with <b>g^(xy) mod N</b>.
 
 
 
