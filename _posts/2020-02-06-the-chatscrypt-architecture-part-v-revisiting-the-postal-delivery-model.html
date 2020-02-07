@@ -1,0 +1,56 @@
+---
+layout: post
+title: "The ChatScrypt Architecture Part V: Revisiting the Postal Delivery Model"
+comments: true
+date: 2020-02-06
+---
+
+Not long after my previous post in this series, I realized I had actually simply rediscovered a version of the Off-the-Record (OTR) protocol, missing the whole point of the Signal protocol. As far as security, the Signal protocol actually does not improve upon OTR that much: It offers only the slight improvement in that with typical usage, keys that can decrypt any message are deleted very quickly, on BOTH Alice and Bob's devices. OTR as I formulated it through IDHEA does this for Alice's computer, but not Bob's. Signal attempts to improve this by incorporating a KDF chain, instead of reusing the same <b>y</b> of Bob's.
+
+<p>So, well-played, Signal. I realize now why it has become a sort of standard in the industry. In some ways, it does seem optimal. Still, I've got one more trick up my sleeve.
+
+<h2>A flaw in the Signal protocol</h2>
+
+There is one very realistic use-case where Signal fails to provide improvement over using a fixed encryption key. This is the setting where Alice sends many messages to Bob, but Bob replies. For instance, airlines often text you your flight status and information, and typically you have no reason to reply to the airline. (Further, your flight information is relatively sensitive and actually worth protecting.) In such a communication, Signal will never increment its DH ratchet, becoming equivalent to a simple KDF-chain protocol (I believe this simple protocol was taken by Signal from something called SCIMP). Admittedly, this provides some forward secrecy, but no future secrecy.
+
+<h2>The Postal Diffie-Hellman</h2>
+
+Here is the problem with Signal: It is building on protocols designed for peer-to-peer messaging - like the old AIM, where offline messages were not available. But Signal is not a peer-to-peer platform; it is centralized, blessed with a server. Signal essentially does not take advantage of this, other than to store offline messages.
+
+<p>Let me approach end-to-end encryption from a new angle, asking how we can take advantage of the server - essentially, a postal delivery hub. Right away, this angle simplifies the exposition tremendously, because it makes obvious the fact that protocols with triggers intertwining sending and receiving, make no sense. The act of sending and receiving should be almost entirely independent.
+
+<h2>Alice's state</h2>
+
+After the protocol has initiated, Alice has the following state:
+
+<ul>
+<li> Alice has a DH private key <b>a</b> for receiving offline messages from Bob.
+<li> Alice has a DH public key <b>b</b> to send offline messages to Bob. This key is not directly authenticated as Bob's, but known by Alice to be from the same person who first identified himself to her as Bob.  
+</ul>
+
+<h2>Initialization</h2>
+
+Alice generates a "backup" DH key pair <b>A</b> and uploads the public key to the server. Optionally, this key is refreshed every time Alice logs on (or any other trigger that happens with intermediate frequency).
+
+
+<h2>Initializing a chat</h2>
+Alice generates a fresh DH key pair <b>a</b>. She informs the server (anonymously) that she wants to send a message to Bob for the first time, attaching the public key <b>a</b>. The server checks if Bob is online. If so, it informs Bob as such, and Bob generates a fresh DH key pair with private key <b>b</b> and sends the public key via the server to Alice. He saves <b>a</b>.
+
+If Bob is offline, the server fetches Bob's backup <b>B</b> instead. It saves <b>a</b> for Bob.
+
+Alice sets her <b>b</b> to the received key in both cases.
+
+
+<h2>Sending a message</h2>
+
+Alice generates a fresh DH key pair <b>x</b>. She informs the server (anonymously) that she wants to send a message to Bob. Attached to this signal is her name and the public key <b>x</b> encrypted with the shared encryption key
+<div class="media">
+<b>g^(ab) mod N</b>.
+</div>
+
+The server checks if Bob is online. If so, the server informs Bob as such, relaying the signal. Bob decrypts the message, verifying that it belongs to whomever first identified himself to her as Alice. Bob generates a fresh DH key pair with private key <b>y</b>. He encrypts the public key with the same shared encryption key and relays the ciphertext to Alice (via the server). Alice decrypts with the shared key, verifying that it belongs to whomever first identified himself to her as Bob. 
+
+She encrypts her message with the shared encryption key
+<div class="media">
+<b>g^(xy) mod N</b>...
+</div>
