@@ -5,7 +5,7 @@ comments: true
 date: 2020-02-06
 ---
 
-Not long after my previous post in this series, I realized I had actually simply rediscovered a version of the Off-the-Record (OTR) protocol, missing the whole point of the Signal protocol. As far as security, the Signal protocol actually does not improve upon OTR that much: It offers only the slight improvement in that with typical usage, keys that can decrypt any message are deleted very quickly, on BOTH Alice and Bob's devices. OTR as I formulated it through IDHEA does this for Alice's device, but not Bob's. Signal attempts to improve this by incorporating a KDF chain, instead of reusing the same <b>y</b> of Bob's.
+Not long after my previous post in this series, I realized I had actually simply rediscovered a version of the Off-the-Record (OTR) protocol, missing the whole point of the Signal protocol. It turns out that the Signal protocol does not improve upon OTR that much: It offers only the slight improvement in that with typical usage, keys that can decrypt any message are deleted very quickly, on BOTH Alice and Bob's devices. OTR as I formulated it through IDHEA does this for Alice's device, but not Bob's. Signal improvement is almost entirely in the KDF chain, not quite reusing the same <b>y</b> of Bob's.
 
 <p>So, well-played, Signal. I realize now why it has become a sort of standard in the industry. In some ways, it does seem optimal. Still, I've got one more trick up my sleeve.
 
