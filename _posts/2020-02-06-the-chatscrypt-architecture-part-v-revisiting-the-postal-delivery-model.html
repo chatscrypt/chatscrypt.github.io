@@ -15,7 +15,7 @@ Not long after my previous post in this series, I realized I had actually simply
 
 <h2>The Postal Diffie-Hellman</h2>
 
-<p>Here is the problem with Signal: It is building on protocols designed for peer-to-peer messaging - like the old AIM, where offline messages were not available. But Signal is not a peer-to-peer platform; it is centralized, with a server. Signal essentially does not take advantage of this, other than to store offline messages.
+<p>Here is the problem with Signal: It is building on protocols designed for peer-to-peer messaging - like the old AIM, where offline messages were not available. But Signal is not a peer-to-peer platform. It is centralized, with a server. Signal essentially does not take advantage of this, other than to store offline messages.
 
 <p>Let me approach end-to-end encryption from a new angle, asking how we can take advantage of the server - essentially, a postal delivery hub. Right away, this angle simplifies the exposition tremendously, because it makes obvious that protocols with triggers that intertwine sending and receiving make no sense. The act of sending and receiving should be almost entirely independent.
 
@@ -69,13 +69,13 @@ Alice sends an initial message to Bob with her public key <b>x = x*</b>, and he 
 <li>She updates private <b>x = x*</b> and saves a new Diffie-Hellman key pair to <b>x*</b>, checking to ensure it is distinct.
   <li>She updates public <b>y' = y</b> and then <b>y = y*</b>.
 </ul>
-Finally, she sends her message, encrypted with the shared encryption key <b>g^(xy) mod N</b>, including within the encrypted message the public key <b>x*</b>.
+Finally, she sends her message, encrypted with the shared encryption key <b>g^(xy) mod N</b>, including within it the encrypted message the public key <b>x*</b>.
 
 <p>If the <b>y*</b> is old, she creates a new Diffie-Hellman key pair with private key <b>r</b> and then encrypts her message using the shared Diffie-Hellman encryption keys 
 <div class="media">
 <b>g^(xy) mod N</b> and <b>g^(ry) mod N</b>.
 </div>
-<p>As before, she includes within the encrypted message the public key <b>x*</b>, but also delivers her message with the public key <b>r</b>.
+<p>As before, she includes within it the encrypted message the public key <b>x*</b>, but also delivers her message with the public key <b>r</b>.
 
 
 
@@ -102,6 +102,8 @@ Strengths of this protocol, all improvements over the Signal protocol, in increa
   
 <li>There are no long term keys of any kind, so even authentication enjoys a kind of forward and future secrecy.
   
+<li>Alice may remain entirely anonymous to the server. Every time she sends a message to Bob, there is no need for the server to know who she is. Further, this "Postal Diffie-Hellman" is carefully crafted so that Bob's insta-reply is directed to the server, not Alice (which would immediately give her away).
+  
 <li>As long as Bob is online to receive messages, Alice almost always uses new keys, on both her side and Bob's.
 </ul>
 
@@ -110,6 +112,4 @@ In defense of some apparent weaknesses:
 <li>Why are there no long term or signed authentication keys? In practice, you need to deliberately go to a third party to verify an identity key one way or another, whether it is long term or not. (When I introduced the concept of long term keys, I presented the hypothetical of people "eventually chatting about their identity keys at the water cooler." This isn't very realistic.)
   
 <li>What if Bob is not online to update his key for Alice? Alice certainly protects the forward and future secrecy of her own key via <b>r</b>, but Bob's key <b>y</b> is reused, as was the case with IDHEA. However, in the Signal protocol, if Bob is offline, his device must store the top key of his KDF chain, which is just as bad as storing <b>y</b>.
-  
-<li>There are only two cryptographic primitives: DH and AES.
 </ul>
