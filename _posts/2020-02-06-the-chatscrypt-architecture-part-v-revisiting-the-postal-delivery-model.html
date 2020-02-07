@@ -84,8 +84,8 @@ Finally, she sends her message, encrypted with the shared encryption key <b>g^(x
 
 If there is no attachment, Bob decrypts using <b>x, y*</b> and updates keys:
 <ul>
-<li>He updates private <b>y = y*</b> and saves a new Diffie-Hellman key pair to <b>y*</b>.
-<li>He updates public <b>x' = x</b> and then <b>x = x*</b>, checking to ensure it is distinct.
+<li>He updates private <b>y = y*</b> and saves a new Diffie-Hellman key pair to <b>y*</b>, checking to ensure it is distinct.
+<li>He updates public <b>x' = x</b> and then <b>x = x*</b>.
 </ul>
 He sends a message to the server with his new <b>y*</b>, encrypted with <b>g^(xy) mod N</b>.
 
