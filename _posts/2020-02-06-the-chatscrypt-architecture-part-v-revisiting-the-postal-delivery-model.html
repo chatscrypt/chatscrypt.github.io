@@ -11,7 +11,7 @@ Not long after my previous post in this series, I realized I had actually simply
 
 <h2>A flaw in the Signal protocol</h2>
 
-There is one very realistic use-case where Signal fails to provide much improvement over using a fixed encryption key. This is the setting where Alice sends many messages to Bob, but Bob never replies. For instance, airlines often text you your flight status and information, and typically you have no reason to reply to the airline. (Further, your flight information is relatively sensitive and actually worth protecting.) In such a communication, Signal will never increment its DH ratchet, becoming equivalent to a simple KDF-chain protocol (I believe this simple protocol was taken by Signal from something called SCIMP). Admittedly, this provides some forward secrecy, but no future secrecy.
+<p>There is one very realistic use-case where Signal fails to provide much improvement over using a fixed encryption key. This is the setting where Alice sends many messages to Bob, but Bob never replies. For instance, airlines often text you your flight status and information, and typically you have no reason to reply to the airline. (Further, your flight information is relatively sensitive and actually worth protecting.) In such a communication, Signal will never increment its DH ratchet, becoming equivalent to a simple KDF-chain protocol (I believe this simple protocol was taken by Signal from something called SCIMP). Admittedly, this provides some forward secrecy, but no future secrecy.
 
 <h2>The Postal Diffie-Hellman</h2>
 
