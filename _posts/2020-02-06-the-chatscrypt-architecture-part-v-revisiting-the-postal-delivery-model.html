@@ -15,7 +15,7 @@ There is one very realistic use-case where Signal fails to provide much improvem
 
 <h2>The Postal Diffie-Hellman</h2>
 
-Here is the problem with Signal: It is building on protocols designed for peer-to-peer messaging - like the old AIM, where offline messages were not available. But Signal is not a peer-to-peer platform; it is centralized, with a server. Signal essentially does not take advantage of this, other than to store offline messages.
+<p>Here is the problem with Signal: It is building on protocols designed for peer-to-peer messaging - like the old AIM, where offline messages were not available. But Signal is not a peer-to-peer platform; it is centralized, with a server. Signal essentially does not take advantage of this, other than to store offline messages.
 
 <p>Let me approach end-to-end encryption from a new angle, asking how we can take advantage of the server - essentially, a postal delivery hub. Right away, this angle simplifies the exposition tremendously, because it makes obvious that protocols with triggers that intertwine sending and receiving make no sense. The act of sending and receiving should be almost entirely independent.
 
