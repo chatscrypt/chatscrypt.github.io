@@ -55,7 +55,7 @@ Bob publishes to the server a public key <b>y</b>. He refreshes this key every t
 
 Alice sends an initial message to Bob with her public key <b>x = x*</b>, and he initializes his state:
 <ul>
-<li>Bob sets <b>y</b> to his published public key, and generates a new Diffie-Hellman key pair for <b>y*</b>.
+<li>Bob sets <b>y</b> to his published public key, and generates a new Diffie-Hellman key pair for <b>y*</b>, checking to ensure it is distinct.
 <li>Both of Alice's public keys are set to <b>x</b>. 
 </ul>
 
@@ -64,9 +64,9 @@ Alice sends an initial message to Bob with her public key <b>x = x*</b>, and he 
   
 <h2>Sending a message</h2>
 
-<p>Alice sends a request to the server to send a message to Bob. The server sends Alice Bob's current <b>y*</b>. Alice decrypts using <b>y, x*</b> and if successful, updates keys:
+<p>Alice sends a request to the server to send a message to Bob. The server sends Alice Bob's current <b>y*</b>. If this doesn't match <b>y</b> (or rather, its encryption), Alice decrypts using <b>y, x*</b> and if successful, updates keys:
 <ul>
-<li>She updates private <b>x = x*</b> and saves a new Diffie-Hellman key pair to <b>x*</b>.
+<li>She updates private <b>x = x*</b> and saves a new Diffie-Hellman key pair to <b>x*</b>, checking to ensure it is distinct.
   <li>She updates public <b>y' = y</b> and then <b>y = y*</b>.
 </ul>
 Finally, she sends her message, encrypted with the shared encryption key <b>g^(xy) mod N</b>, including within the encrypted message the public key <b>x*</b>.
@@ -85,7 +85,7 @@ Finally, she sends her message, encrypted with the shared encryption key <b>g^(x
 If there is no attachment, Bob decrypts using <b>x, y*</b> and updates keys:
 <ul>
 <li>He updates private <b>y = y*</b> and saves a new Diffie-Hellman key pair to <b>y*</b>.
-<li>He updates public <b>x' = x</b> and then <b>x = x*</b>.
+<li>He updates public <b>x' = x</b> and then <b>x = x*</b>, checking to ensure it is distinct.
 </ul>
 He sends a message to the server with his new <b>y*</b>, encrypted with <b>g^(xy) mod N</b>.
 
