@@ -92,4 +92,24 @@ He sends a message to the server with his new <b>y*</b>, encrypted with <b>g^(xy
 <p>If there is an attached public key <b>r</b>, he decrypts the message using <b>x', y, r</b> and does not update keys. He sends a message to the server with the old <b>y*</b>, encrypted with <b>g^(xy) mod N</b>.
 
 
+<h2>Analysis</h2>
 
+Strengths of this protocol, all improvements over the Signal protocol, in increasing significance:
+<ul>
+<li>This protocol is very robust against dropped or misordered messages, matching IDHEA.
+  
+<li>There are only two cryptographic primitives: DH and AES.
+  
+<li>There are no long term keys of any kind, so even authentication enjoys a kind of forward and future secrecy.
+  
+<li>As long as Bob is online to receive messages, Alice almost always uses new keys, on both her side and Bob's.
+</ul>
+
+In defense of some apparent weaknesses:
+<ul>
+<li>Why are there no long term or signed authentication keys? In practice, you need to deliberately go to a third party to verify an identity key one way or another, whether it is long term or not. (When I introduced the concept of long term keys, I presented the hypothetical of people "eventually chatting about their identity keys at the water cooler." This isn't very realistic.)
+  
+<li>What if Bob is not online to update his key for Alice? Alice certainly protects the forward and future secrecy of her own key via <b>r</b>, but Bob's key <b>y</b> is reused, as was the case with IDHEA. However, in the Signal protocol, if Bob is offline, his device must store the top key of his KDF chain, which is just as bad as storing <b>y</b>.
+  
+<li>There are only two cryptographic primitives: DH and AES.
+</ul>
