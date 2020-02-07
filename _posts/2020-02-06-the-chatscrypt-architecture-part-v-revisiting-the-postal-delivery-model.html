@@ -64,14 +64,14 @@ Alice sends an initial message to Bob with her public key <b>x = x*</b>, and he 
   
 <h2>Sending a message</h2>
 
-<p>Alice sends a request to the server to send a message to Bob. The server sends Alice Bob's current <b>y*</b>. If this doesn't match <b>y</b> (or rather, its encryption), Alice decrypts using <b>y, x*</b> and if successful, updates keys:
+<p>Alice sends a request to the server to send a message to Bob. The server sends Alice Bob's current <b>y*</b>. If this doesn't match <b>y</b> (or rather, its encryption), Alice decrypts using <b>y, x*</b> and updates keys:
 <ul>
 <li>She updates private <b>x = x*</b> and saves a new Diffie-Hellman key pair to <b>x*</b>, checking to ensure it is distinct.
   <li>She updates public <b>y' = y</b> and then <b>y = y*</b>.
 </ul>
 Finally, she sends her message, encrypted with the shared encryption key <b>g^(xy) mod N</b>, including within the encrypted message the public key <b>x*</b>.
 
-<p>If the first decryption attempt fails, she does not update keys. Instead, she creates a new Diffie-Hellman key pair with private key <b>r</b> and then encrypts her message using the shared Diffie-Hellman encryption keys 
+<p>If the <b>y*</b> is old, she creates a new Diffie-Hellman key pair with private key <b>r</b> and then encrypts her message using the shared Diffie-Hellman encryption keys 
 <div class="media">
 <b>g^(xy) mod N</b> and <b>g^(ry) mod N</b>.
 </div>
