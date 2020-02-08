@@ -37,6 +37,7 @@ Bob will have the same state but in reverse:
 <ul>
 <li>Bob's current private key <b>y</b>, and pending private key <b>y*</b> waiting for confirmation from Alice.
 <li>Alice's current public key <b>x</b>, and previous public key <b>x'</b> in case Bob has processed the update to <b>x</b>, but Alice is unaware and still sending <b>x'</b> encrypted messages.
+<li>A binary set to whether Bob has received a message from Alice since his last message. (Not needed in the logic of Alice sending to Bob.)
 </ul>
 
 <h2>The server's state</h2>
@@ -54,13 +55,13 @@ Bob publishes to the server a public key <b>y</b>. He refreshes this key every t
 <li>Both of Bob's public keys are set to <b>y</b>. 
 <li>The binary is set to false.
 </ul>
-Alice then sends a message to the server with her new <b>x*</b>, encrypted with key <b>g^(xy) mod N</b>. (This is the first of two lines in this specification that plays no role whatsoever in sending messages from Alice to Bob. It is here only for sending messages from Bob to Alice.)
+Alice then sends a message to the server with her new <b>x*</b>, encrypted with key <b>g^(xy) mod N</b>. (Not needed in the logic of Alice sending to Bob.)
 
 <p>If Bob is online, his initialization is straightforward. Alice sends an initial message to Bob with her public key <b>x</b>. Bob initializes his state in the same way, in reverse:
 <ul>
 <li>Bob sets <b>y</b> to his published DH key pair and saves a new DH key pair to <b>y*</b>, checking to ensure it is distinct.
 <li>Both of Alice's public keys are set to <b>x</b>. 
-<li>The binary is set to false. (This is the second bit that plays no role in messages from Alice to Bob.)
+<li>The binary is set to false.
 </ul>
 Bob then sends a message to the server with his new <b>y*</b>, encrypted with key <b>g^(xy) mod N</b>.
 
@@ -80,18 +81,28 @@ Finally, she sends her message, encrypted with the shared encryption key <b>g^(x
 
 <h2>Receiving a message</h2>
 
-If there is no attachment, Bob decrypts using <b>x, y*</b> and updates keys:
+
+<p>If there is an attached public key <b>r</b>, Bob decrypts the message using <b>x', y, r</b> and does not update keys.
+  
+<p>If there is no attachment, or the above attempt fails, Bob decrypts using <b>x, y*</b> and updates keys:
 <ul>
 <li>He updates private <b>y = y*</b> and saves a new DH key pair to <b>y*</b>, checking to ensure it is distinct.
 <li>He updates public <b>x' = x</b> and then <b>x = x*</b>.
 </ul>
 He sends a message to the server with his new <b>y*</b>, encrypted with <b>g^(xy) mod N</b>.
 
-<p>If there is an attached public key <b>r</b>, he decrypts the message using <b>x', y, r</b> and does not update keys.
+<p>Lastly, if there is no attachment and the above attempt fails, Bob decrypts using <b>x, y*</b> and does not update keys.
+
 
 <h2>Checks</h2>
 
-Does the decryption ever fail?
+Does the decryption ever fail? Consider first the decryption that occurs in the sending phase. The decryption only occurs if the public key of Bob's stored in the server is foreign to Alice. The server key is thus either older or newer than the key Alice has stored. Note that Alice's copy of Bob's key is strictly older than the server's, since Alice fetches her copy of Bob's key from the server itself (except in the case that Bob messages Alice directly, which we rule out via the binary). The server key thus must be newer than Alice's. Then, note that Bob only encrypts a newly generated key using a shared encryption key that Alice just used, so it is precisely "one step newer," as desired.
+
+<p>Next, consider the receiving phase, where Bob receives a message with attachment. I claim the decryption uses the older keys except in the case of a lost or misordered message (so I attempt with the old keys first). Alice sends a message with attached <b>r</b> only if her <b>y</b> matches the server's copy of <b>y*</b>. Of course, the server's copy of <b>y*</b> is older than or equal to Bob's, so the <b>y</b> used to encrypt the message is likewise older than or equal to Bob's <b>y*</b>. Equality would mean that Bob's freshly generated <b>y*</b> somehow made its way to Alice. The binary rules out the case that it was through a direct message from Bob, so it was through the server. This means that a previous message from Alice had caused the update; this message from Alice should have instigated a key update on Bob's side - so it was either late or lost.
+
+<p>With no attachment, a received message similarly uses newer keys except in the case of a lost or misordered message.
+  
+<p>Can the ratchet ever get stuck? 
 
 
 <h2>Analysis</h2>
