@@ -82,7 +82,7 @@ Finally, she sends her message, encrypted with the shared encryption key <b>g^(x
 <h2>Receiving a message</h2>
 
 
-<p>If there is an attached public key <b>r</b>, Bob decrypts the message using <b>x', y, r</b> and does not update keys. If the decryption succeeds, he sends a message to the server with his new <b>y*</b>, encrypted with <b>g^(xy) mod N</b>.
+<p>If there is an attached public key <b>r</b>, Bob decrypts the message using <b>x', y, r</b> and does not update keys. If the decryption succeeds, he sends a message to the server with his <b>y*</b>, encrypted with <b>g^(xy) mod N</b>.
   
 <p>If there is no attachment, or the above decryption attempt fails, Bob decrypts using <b>x, y*</b> and updates keys:
 <ul>
@@ -102,8 +102,12 @@ Does the decryption ever fail? Consider first the decryption that occurs in the 
 
 <p>With no attachment, a received message similarly uses newer keys except in the case of a lost or misordered message.
   
-<p>Can the ratchet ever get stuck? Notice that all messages are sent with a newer public key within the encrypted message, so if the ratchet gets stuck, it's due to the receiving side. On the receiving side, a lack of update occurs only on receipt of messages encrypted with old keys and no attachment. In this case, either Bob has sent Alice a message, 
-
+<p>Can the ratchet ever get stuck? Consider here only new messages (as opposed to very old misordered messages, which are not relevant to the question). Notice that all messages are sent with a newer public key within the encrypted message, so if the ratchet gets stuck, it's due to the receiving side. On the receiving side, a lack of update occurs only when 
+<ul>
+ <li> Bob has newer keys than what Alice is using to encrypt,
+ <li>and Alice's messages have no attachment.
+</ul>
+If Bob messages Alice, the first condition fails. Thus, suppose in addition that Bob is not messaging Alice. Then no attachments implies Alice is actively fetching from the server, progressing her keys.
 
 <h2>Analysis</h2>
 
