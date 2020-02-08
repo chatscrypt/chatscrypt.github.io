@@ -65,14 +65,14 @@ Bob then sends a message to the server with his new <b>y*</b>, encrypted with ke
   
 <h2>Sending a message</h2>
 
-<p>Alice sends a request to the server to send a message to Bob. The server sends Alice Bob's current <b>y*</b>. If this doesn't match <b>y</b> (or rather, its encryption), Alice decrypts <b>y*</b> using <b>y, x*</b>. If successful, she updates keys:
+<p>Alice sends a request to the server to send a message to Bob. The server sends Alice Bob's current <b>y*</b>. If this doesn't match <b>y</b> (or rather, its encryption), Alice decrypts <b>y*</b> using <b>y, x*</b>. If successful (which is not always the case), she updates keys:
 <ul>
 <li>She updates private <b>x = x*</b> and saves a new DH key pair to <b>x*</b>, checking to ensure it is distinct.
   <li>She updates public <b>y' = y</b> and then <b>y = y*</b>.
 </ul>
 Finally, she sends her message, encrypted with the shared encryption key <b>g^(xy) mod N</b>, including the public key <b>x*</b> in the encrypted message.
 
-<p>If the <b>y*</b> is old or the decryption fails, she creates a new DH key pair with private key <b>r</b> and then encrypts her message using the shared encryption key <b>g^(ry) mod N</b>. As before, she includes the public key <b>x*</b> in the encrypted message. However, now she attaches the public key <b>r</b> encrypted with key <b>g^(xy) mod N</b>. Once sent, she immediately deletes <b>r</b>.
+<p>If the <b>y*</b> is old, she creates a new DH key pair with private key <b>r</b> and then encrypts her message using the shared encryption key <b>g^(ry) mod N</b>. As before, she includes the public key <b>x*</b> in the encrypted message. However, now she attaches the public key <b>r</b> encrypted with key <b>g^(xy) mod N</b>. Once sent, she immediately deletes <b>r</b>.
 
 
 
