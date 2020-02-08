@@ -55,12 +55,12 @@ Bob publishes to the server a public key <b>y</b>. He refreshes this key every t
 
 If Bob is online, his initialization is straightforward. Alice sends an initial message to Bob with her public key <b>x</b>. Bob initializes his state in the same way, in reverse:
 <ul>
-<li>Bob sets <b>y, y*</b> to his published Diffie-Hellman key pair.
+<li>Bob sets <b>y</b> to his published Diffie-Hellman key pair and saves a new Diffie-Hellman key pair to <b>y*</b>, checking to ensure it is distinct.
 <li>Both of Alice's public keys are set to <b>x</b>. 
 </ul>
-Bob then sends a message to the server with his "new" <b>y*</b>, encrypted with key <b>g^(xy) mod N</b>.
+Bob then sends a message to the server with his new <b>y*</b>, encrypted with key <b>g^(xy) mod N</b>.
 
-<p>If Bob is offline, note that the initialization can all be done by the server and Alice, except that the private key <b>y</b> needs to be delayed until Bob comes online. 
+<p>If Bob is offline, note that the initialization can all be done by the server and Alice, provided they set <b>y* = y</b>. The private key <b>y</b> needs to be delayed until Bob comes online, but Alice doesn't need it to get started.
   
 <h2>Sending a message</h2>
 
