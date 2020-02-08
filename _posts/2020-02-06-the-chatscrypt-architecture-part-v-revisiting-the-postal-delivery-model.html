@@ -82,16 +82,16 @@ Finally, she sends her message, encrypted with the shared encryption key <b>g^(x
 <h2>Receiving a message</h2>
 
 
-<p>If there is an attached public key <b>r</b>, Bob decrypts the message using <b>x', y, r</b> and does not update keys.
+<p>If there is an attached public key <b>r</b>, Bob decrypts the message using <b>x', y, r</b> and does not update keys. If the decryption succeeds, he sends a message to the server with his new <b>y*</b>, encrypted with <b>g^(xy) mod N</b>.
   
-<p>If there is no attachment, or the above attempt fails, Bob decrypts using <b>x, y*</b> and updates keys:
+<p>If there is no attachment, or the above decryption attempt fails, Bob decrypts using <b>x, y*</b> and updates keys:
 <ul>
 <li>He updates private <b>y = y*</b> and saves a new DH key pair to <b>y*</b>, checking to ensure it is distinct.
 <li>He updates public <b>x' = x</b> and then <b>x = x*</b>.
 </ul>
 He sends a message to the server with his new <b>y*</b>, encrypted with <b>g^(xy) mod N</b>.
 
-<p>Lastly, if there is no attachment and the above attempt fails, Bob decrypts using <b>x, y*</b> and does not update keys.
+<p>Lastly, if there is no attachment and the above attempt fails, Bob decrypts using <b>x', y</b> and does not update keys.
 
 
 <h2>Checks</h2>
@@ -102,7 +102,7 @@ Does the decryption ever fail? Consider first the decryption that occurs in the 
 
 <p>With no attachment, a received message similarly uses newer keys except in the case of a lost or misordered message.
   
-<p>Can the ratchet ever get stuck? 
+<p>Can the ratchet ever get stuck? Notice that all messages are sent with a newer public key within the encrypted message, so if the ratchet gets stuck, it's due to the receiving side. On the receiving side, a lack of update occurs only on receipt of messages encrypted with old keys and no attachment. In this case, either Bob has sent Alice a message, 
 
 
 <h2>Analysis</h2>
