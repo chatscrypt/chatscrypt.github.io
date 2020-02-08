@@ -71,11 +71,7 @@ Bob then sends a message to the server with his "new" <b>y*</b>, encrypted with 
 </ul>
 Finally, she sends her message, encrypted with the shared encryption key <b>g^(xy) mod N</b>, including the public key <b>x*</b> in the encrypted message.
 
-<p>If the <b>y*</b> is old, she creates a new Diffie-Hellman key pair with private key <b>r</b> and then encrypts her message using the shared Diffie-Hellman encryption keys 
-<div class="media">
-<b>g^(xy) mod N</b> and <b>g^(ry) mod N</b>.
-</div>
-<p>As before, she includes the public key <b>x*</b> in the encrypted message, but also delivers her message with the public key <b>r</b>.
+<p>If the <b>y*</b> is old, she creates a new Diffie-Hellman key pair with private key <b>r</b> and then encrypts her message using the shared Diffie-Hellman encryption key <b>g^(ry) mod N</b>. As before, she includes the public key <b>x*</b> in the encrypted message. However, now she attaches the public key <b>r</b> encrypted with key <b>g^(xy) mod N</b>. Once sent, she immediately deletes <b>r</b>.
 
 
 
