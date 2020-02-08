@@ -17,7 +17,7 @@ Not long after my previous post in this series, I realized I had actually simply
 
 <p>Here is the problem with Signal: It is building on protocols designed for peer-to-peer messaging - like the old AIM, where offline messages were not available. But Signal is not a peer-to-peer platform. It is centralized, with a server. Signal essentially does not take advantage of this, other than to store offline messages.
 
-<p>Let me approach end-to-end encryption from a new angle, asking how we can take advantage of the server - essentially, a postal delivery hub. Right away, this angle simplifies the exposition tremendously, because it makes obvious that protocols with triggers that intertwine sending and receiving make no sense. The act of sending and receiving should be almost entirely independent.
+<p>Let me approach end-to-end encryption from a new angle, asking how we can take advantage of the server - essentially, a postal delivery hub. 
 
 <h2>Alice's state</h2>
 
@@ -45,37 +45,37 @@ Bob will have the same state but in reverse:
 
 <h2>Initialization</h2>
 
-Bob publishes to the server a public key <b>y</b>. He refreshes this key every time he comes online, and while online, every time someone new initiates a stream of messages to him.
+Bob publishes to the server a public key <b>y</b>. He refreshes this key every time he comes online, and while online, every time someone new initiates a stream of messages to him. 
 
 <p>When Alice wants to initiate a stream of messages to Bob, she fetches Bob's public key and initializes her state:
 <ul>
-<li>Alice sets both <b>x, x*</b> to the same new Diffie-Hellman key pair.
+<li>Alice sets <b>x, x*</b> to the same new Diffie-Hellman key pair.
 <li>Both of Bob's public keys are set to <b>y</b>. 
 </ul>
 
-Alice sends an initial message to Bob with her public key <b>x = x*</b>, and he initializes his state:
+If Bob is online, his initialization is straightforward. Alice sends an initial message to Bob with her public key <b>x</b>. Bob initializes his state in the same way, in reverse:
 <ul>
-<li>Bob sets <b>y</b> to his published public key, and generates a new Diffie-Hellman key pair for <b>y*</b>, checking to ensure it is distinct.
+<li>Bob sets <b>y, y*</b> to his published Diffie-Hellman key pair.
 <li>Both of Alice's public keys are set to <b>x</b>. 
 </ul>
+Bob then sends a message to the server with his "new" <b>y*</b>, encrypted with key <b>g^(xy) mod N</b>.
 
-<p>Bob then sends a message to the server with his new <b>y*</b>, encrypted with <b>g^(xy) mod N</b>.
-
+<p>If Bob is offline, note that the initialization can all be done by the server and Alice, except that the private key <b>y</b> needs to be delayed until Bob comes online. 
   
 <h2>Sending a message</h2>
 
-<p>Alice sends a request to the server to send a message to Bob. The server sends Alice Bob's current <b>y*</b>. If this doesn't match <b>y</b> (or rather, its encryption), Alice decrypts using <b>y, x*</b> and updates keys:
+<p>Alice sends a request to the server to send a message to Bob. The server sends Alice Bob's current <b>y*</b>. If this doesn't match <b>y</b> (or rather, its encryption), Alice decrypts <b>y*</b> using <b>y, x*</b> and updates keys:
 <ul>
 <li>She updates private <b>x = x*</b> and saves a new Diffie-Hellman key pair to <b>x*</b>, checking to ensure it is distinct.
   <li>She updates public <b>y' = y</b> and then <b>y = y*</b>.
 </ul>
-Finally, she sends her message, encrypted with the shared encryption key <b>g^(xy) mod N</b>, including within it the encrypted message the public key <b>x*</b>.
+Finally, she sends her message, encrypted with the shared encryption key <b>g^(xy) mod N</b>, including the public key <b>x*</b> in the encrypted message.
 
 <p>If the <b>y*</b> is old, she creates a new Diffie-Hellman key pair with private key <b>r</b> and then encrypts her message using the shared Diffie-Hellman encryption keys 
 <div class="media">
 <b>g^(xy) mod N</b> and <b>g^(ry) mod N</b>.
 </div>
-<p>As before, she includes within it the encrypted message the public key <b>x*</b>, but also delivers her message with the public key <b>r</b>.
+<p>As before, she includes the public key <b>x*</b> in the encrypted message, but also delivers her message with the public key <b>r</b>.
 
 
 
