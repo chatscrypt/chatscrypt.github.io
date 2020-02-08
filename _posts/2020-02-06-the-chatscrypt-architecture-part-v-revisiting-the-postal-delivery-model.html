@@ -82,7 +82,7 @@ Finally, she sends her message, encrypted with the shared encryption key <b>g^(x
 <h2>Receiving a message</h2>
 
 
-<p>If there is an attached public key <b>r</b>, Bob decrypts the message using <b>x', y, r</b> and does not update keys. If the decryption succeeds, he sends a message to the server with his <b>y*</b>, encrypted with <b>g^(xy) mod N</b>.
+<p>If there is an attached public key <b>r</b>, Bob decrypts the message using <b>x', y, r</b>. If the decryption succeeds, he sends a message to the server with his <b>y*</b>, encrypted with <b>g^(xy) mod N</b>.
   
 <p>If there is no attachment, or the above decryption attempt fails, Bob decrypts using <b>x, y*</b> and updates keys:
 <ul>
@@ -91,7 +91,7 @@ Finally, she sends her message, encrypted with the shared encryption key <b>g^(x
 </ul>
 He sends a message to the server with his new <b>y*</b>, encrypted with <b>g^(xy) mod N</b>.
 
-<p>Lastly, if there is no attachment and the above attempt fails, Bob decrypts using <b>x', y</b> and does not update keys.
+<p>Lastly, if there is no attachment and the above attempt fails, Bob decrypts using <b>x', y</b>.
 
 
 <h2>Checks</h2>
