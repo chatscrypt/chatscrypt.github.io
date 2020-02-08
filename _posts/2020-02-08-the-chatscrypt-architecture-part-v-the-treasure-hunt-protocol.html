@@ -1,0 +1,11 @@
+---
+layout: post
+title: "The ChatScrypt Architecture Part VI: The Treasure Hunt Protocol"
+comments: true
+date: 2020-02-08
+---
+
+New issue: I realize the previous protocol was flawed: When Alice sends Bob a message, instigating him to push his "half message" containing his next key to the server, and Alice later fetches it, the server can link the "two instances of Alice" and thus all instances of Alice, in principle.
+
+<p>So I have more tricks. The difficulty with trying to preserve not just confidentiality but anonymity is that messages should be instant, but from time-coincident messages, the server can deduce a coherent identity for Alice. One way around this could be a postal model where Alice and Bob repeatedly direct the other to "secret" public lockers, like a treasure hunt. 
+
