@@ -49,13 +49,13 @@ Bob publishes to the server a public key <b>y</b>. He refreshes this key every t
 
 <p>When Alice wants to initiate a stream of messages to Bob, she fetches Bob's public key and initializes her state:
 <ul>
-<li>Alice sets <b>x, x*</b> to the same new Diffie-Hellman key pair.
+<li>Alice sets <b>x, x*</b> to the same new DH key pair.
 <li>Both of Bob's public keys are set to <b>y</b>. 
 </ul>
 
 If Bob is online, his initialization is straightforward. Alice sends an initial message to Bob with her public key <b>x</b>. Bob initializes his state in the same way, in reverse:
 <ul>
-<li>Bob sets <b>y</b> to his published Diffie-Hellman key pair and saves a new Diffie-Hellman key pair to <b>y*</b>, checking to ensure it is distinct.
+<li>Bob sets <b>y</b> to his published DH key pair and saves a new DH key pair to <b>y*</b>, checking to ensure it is distinct.
 <li>Both of Alice's public keys are set to <b>x</b>. 
 </ul>
 Bob then sends a message to the server with his new <b>y*</b>, encrypted with key <b>g^(xy) mod N</b>.
@@ -66,12 +66,12 @@ Bob then sends a message to the server with his new <b>y*</b>, encrypted with ke
 
 <p>Alice sends a request to the server to send a message to Bob. The server sends Alice Bob's current <b>y*</b>. If this doesn't match <b>y</b> (or rather, its encryption), Alice decrypts <b>y*</b> using <b>y, x*</b>. If successful, she updates keys:
 <ul>
-<li>She updates private <b>x = x*</b> and saves a new Diffie-Hellman key pair to <b>x*</b>, checking to ensure it is distinct.
+<li>She updates private <b>x = x*</b> and saves a new DH key pair to <b>x*</b>, checking to ensure it is distinct.
   <li>She updates public <b>y' = y</b> and then <b>y = y*</b>.
 </ul>
 Finally, she sends her message, encrypted with the shared encryption key <b>g^(xy) mod N</b>, including the public key <b>x*</b> in the encrypted message.
 
-<p>If the <b>y*</b> is old or the decryption fails, she creates a new Diffie-Hellman key pair with private key <b>r</b> and then encrypts her message using the shared encryption key <b>g^(ry) mod N</b>. As before, she includes the public key <b>x*</b> in the encrypted message. However, now she attaches the public key <b>r</b> encrypted with key <b>g^(xy) mod N</b>. Once sent, she immediately deletes <b>r</b>.
+<p>If the <b>y*</b> is old or the decryption fails, she creates a new DH key pair with private key <b>r</b> and then encrypts her message using the shared encryption key <b>g^(ry) mod N</b>. As before, she includes the public key <b>x*</b> in the encrypted message. However, now she attaches the public key <b>r</b> encrypted with key <b>g^(xy) mod N</b>. Once sent, she immediately deletes <b>r</b>.
 
 
 
@@ -80,7 +80,7 @@ Finally, she sends her message, encrypted with the shared encryption key <b>g^(x
 
 If there is no attachment, Bob decrypts using <b>x, y*</b> and updates keys:
 <ul>
-<li>He updates private <b>y = y*</b> and saves a new Diffie-Hellman key pair to <b>y*</b>, checking to ensure it is distinct.
+<li>He updates private <b>y = y*</b> and saves a new DH key pair to <b>y*</b>, checking to ensure it is distinct.
 <li>He updates public <b>x' = x</b> and then <b>x = x*</b>.
 </ul>
 He sends a message to the server with his new <b>y*</b>, encrypted with <b>g^(xy) mod N</b>.
