@@ -26,6 +26,7 @@ After the protocol has initiated, Alice has the following state:
 <ul>
 <li>Alice's current private key <b>x</b>, and pending private key <b>x*</b> waiting for confirmation from Bob.
 <li>Bob's current public key <b>y</b>, and previous public key <b>y'</b> in case Alice has processed the update to <b>y</b>, but Bob is unaware and still sending <b>y'</b> encrypted messages.
+<li>A binary set to whether Alice has received a message from Bob since her last message.
 </ul>
 
 
@@ -51,13 +52,15 @@ Bob publishes to the server a public key <b>y</b>. He refreshes this key every t
 <ul>
 <li>Alice sets <b>x, x*</b> to the same new DH key pair.
 <li>Both of Bob's public keys are set to <b>y</b>. 
+<li>The binary is set to false.
 </ul>
-Alice then sends a message to the server with her new <b>x*</b>, encrypted with key <b>g^(xy) mod N</b>. (This is the single line in this specification that plays no role whatsoever in sending messages from Alice to Bob. It is here only for sending messages from Bob to Alice.)
+Alice then sends a message to the server with her new <b>x*</b>, encrypted with key <b>g^(xy) mod N</b>. (This is the first of two lines in this specification that plays no role whatsoever in sending messages from Alice to Bob. It is here only for sending messages from Bob to Alice.)
 
 <p>If Bob is online, his initialization is straightforward. Alice sends an initial message to Bob with her public key <b>x</b>. Bob initializes his state in the same way, in reverse:
 <ul>
 <li>Bob sets <b>y</b> to his published DH key pair and saves a new DH key pair to <b>y*</b>, checking to ensure it is distinct.
 <li>Both of Alice's public keys are set to <b>x</b>. 
+<li>The binary is set to false. (This is the second bit that plays no role in messages from Alice to Bob.)
 </ul>
 Bob then sends a message to the server with his new <b>y*</b>, encrypted with key <b>g^(xy) mod N</b>.
 
@@ -65,16 +68,14 @@ Bob then sends a message to the server with his new <b>y*</b>, encrypted with ke
   
 <h2>Sending a message</h2>
 
-<p>Alice sends a request to the server to send a message to Bob. The server sends Alice Bob's current <b>y*</b>. If this doesn't match <b>y</b> (or rather, its encryption), Alice decrypts <b>y*</b> using <b>y, x*</b>. If successful (which is not always the case), she updates keys:
+<p>If the binary is false, Alice sends a request to the server to send a message to Bob. The server sends Alice Bob's current <b>y*</b>. If this doesn't match <b>y</b> (or rather, its encryption), Alice decrypts <b>y*</b> using <b>y, x*</b> and updates keys:
 <ul>
 <li>She updates private <b>x = x*</b> and saves a new DH key pair to <b>x*</b>, checking to ensure it is distinct.
   <li>She updates public <b>y' = y</b> and then <b>y = y*</b>.
 </ul>
-Finally, she sends her message, encrypted with the shared encryption key <b>g^(xy) mod N</b>, including the public key <b>x*</b> in the encrypted message.
+Finally, she sends her message, encrypted with the shared encryption key <b>g^(xy) mod N</b>, including the public key <b>x*</b> in the encrypted message. She does likewise if the binary were true.
 
-<p>If the <b>y*</b> is old, she creates a new DH key pair with private key <b>r</b> and then encrypts her message using the shared encryption key <b>g^(ry) mod N</b>. As before, she includes the public key <b>x*</b> in the encrypted message. However, now she attaches the public key <b>r</b> encrypted with key <b>g^(xy) mod N</b>. Once sent, she immediately deletes <b>r</b>.
-
-
+<p>If the <b>y*</b> is old however, she creates a new DH key pair with private key <b>r</b> and then encrypts her message using the shared encryption key <b>g^(ry) mod N</b>. As before, she includes the public key <b>x*</b> in the encrypted message. However, now she attaches the public key <b>r</b> encrypted with key <b>g^(xy) mod N</b>. Once sent, she immediately deletes <b>r</b>.
 
 
 <h2>Receiving a message</h2>
@@ -87,6 +88,10 @@ If there is no attachment, Bob decrypts using <b>x, y*</b> and updates keys:
 He sends a message to the server with his new <b>y*</b>, encrypted with <b>g^(xy) mod N</b>.
 
 <p>If there is an attached public key <b>r</b>, he decrypts the message using <b>x', y, r</b> and does not update keys.
+
+<h2>Checks</h2>
+
+Does the decryption ever fail?
 
 
 <h2>Analysis</h2>
