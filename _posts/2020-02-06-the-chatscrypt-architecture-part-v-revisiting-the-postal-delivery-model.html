@@ -74,40 +74,34 @@ Bob then sends a message to the server with his new <b>y*</b>, encrypted with ke
 <li>She updates private <b>x = x*</b> and saves a new DH key pair to <b>x*</b>, checking to ensure it is distinct.
   <li>She updates public <b>y' = y</b> and then <b>y = y*</b>.
 </ul>
-Finally, she sends her message, encrypted with the shared encryption key <b>g^(xy) mod N</b>, including the public key <b>x*</b> in the encrypted message. She does likewise if the binary were true.
+Finally, she sends her message, encrypted with the shared encryption key <b>g^(xy) mod N</b>, including the public key <b>x*</b> in the encrypted message. 
+
+<p>If the binary is true, she does the same but without checking or updating keys.
 
 <p>If the <b>y*</b> is old however, she creates a new DH key pair with private key <b>r</b> and then encrypts her message using the shared encryption key <b>g^(ry) mod N</b>. As before, she includes the public key <b>x*</b> in the encrypted message. However, now she attaches the public key <b>r</b> encrypted with key <b>g^(xy) mod N</b>. Once sent, she immediately deletes <b>r</b>.
 
 
 <h2>Receiving a message</h2>
-
-
-<p>If there is an attached public key <b>r</b>, Bob decrypts the message using <b>x', y, r</b>. If the decryption succeeds, he sends a message to the server with his <b>y*</b>, encrypted with <b>g^(xy) mod N</b>.
-  
-<p>If there is no attachment, or the above decryption attempt fails, Bob decrypts using <b>x, y*</b> and updates keys:
+Bob decrypts the message using either <b>x', y</b> or <b>x, y*</b>. If the latter, he updates keys:
 <ul>
 <li>He updates private <b>y = y*</b> and saves a new DH key pair to <b>y*</b>, checking to ensure it is distinct.
 <li>He updates public <b>x' = x</b> and then <b>x = x*</b>.
 </ul>
 He sends a message to the server with his new <b>y*</b>, encrypted with <b>g^(xy) mod N</b>.
 
-<p>Lastly, if there is no attachment and the above attempt fails, Bob decrypts using <b>x', y</b>.
+If there is an attached <b>r</b> to the message, Bob sends the server message regardless of which key was used to decrypt.
 
 
 <h2>Checks</h2>
 
-Does the decryption ever fail? Consider first the decryption that occurs in the sending phase. The decryption only occurs if the public key of Bob's stored in the server is foreign to Alice. The server key is thus either older or newer than the key Alice has stored. Note that Alice's copy of Bob's key is strictly older than the server's, since Alice fetches her copy of Bob's key from the server itself (except in the case that Bob messages Alice directly, which we rule out via the binary). The server key thus must be newer than Alice's. Then, note that Bob only encrypts a newly generated key using a shared encryption key that Alice just used, so it is precisely "one step newer," as desired.
-
-<p>Next, consider the receiving phase, where Bob receives a message with attachment. I claim the decryption uses the older keys except in the case of a lost or misordered message (so I attempt with the old keys first). Alice sends a message with attached <b>r</b> only if her <b>y</b> matches the server's copy of <b>y*</b>. Of course, the server's copy of <b>y*</b> is older than or equal to Bob's, so the <b>y</b> used to encrypt the message is likewise older than or equal to Bob's <b>y*</b>. Equality would mean that Bob's freshly generated <b>y*</b> somehow made its way to Alice. The binary rules out the case that it was through a direct message from Bob, so it was through the server. This means that a previous message from Alice had caused the update; this message from Alice should have instigated a key update on Bob's side - so it was either late or lost.
-
-<p>With no attachment, a received message similarly uses newer keys except in the case of a lost or misordered message.
+First, we check that the decryption that occurs in the sending phase cannot fail. The decryption only occurs if the public key of Bob's stored in the server is foreign to Alice. The server key is thus either older or newer than the key Alice has stored. Note that Alice's copy of Bob's key is strictly older than the server's, since Alice fetches her copy of Bob's key from the server itself (except in the case that Bob messages Alice directly, which we rule out via the binary). The server key thus must be newer than Alice's. Then, note that Bob only encrypts a newly generated key using a shared encryption key that Alice just used, so it is precisely "one step newer," as desired.
   
-<p>Can the ratchet ever get stuck? Consider here only new messages (as opposed to very old misordered messages, which are not relevant to the question). Notice that all messages are sent with a newer public key within the encrypted message, so if the ratchet gets stuck, it's due to the receiving side. On the receiving side, a lack of update occurs only when 
+<p>Can the ratchet ever get stuck? Consider here only new messages (as opposed to very old misordered messages, which are not relevant to the question). Notice that all messages are sent with a new public key within the encrypted message, so if the ratchet gets stuck, it's due to the receiving side. On the receiving side, a lack of update occurs only when 
 <ul>
- <li> Bob has newer keys than what Alice is using to encrypt,
- <li>and Alice's messages have no attachment.
+ <li> Bob has newer keys than what Alice used to encrypt the message,
+ <li> and Alice's messages have no attachment.
 </ul>
-<p>If Bob messages Alice, the first condition fails. Thus, suppose in addition that Bob is not messaging Alice. Then no attachments implies Alice is actively fetching from the server, advancing her keys.
+<p>Bob is not messaging Alice, otherwise the first condition would quickly close. Then no attachments in the sending phase implies Alice is actively fetching from the server, advancing her keys.
 
 <h2>Analysis</h2>
 
