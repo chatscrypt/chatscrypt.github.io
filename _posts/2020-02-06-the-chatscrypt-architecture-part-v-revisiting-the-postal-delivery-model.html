@@ -52,8 +52,9 @@ Bob publishes to the server a public key <b>y</b>. He refreshes this key every t
 <li>Alice sets <b>x, x*</b> to the same new DH key pair.
 <li>Both of Bob's public keys are set to <b>y</b>. 
 </ul>
+Alice then sends a message to the server with her new <b>x*</b>, encrypted with key <b>g^(xy) mod N</b>. (This is the single line in this specification that plays no role whatsoever with sending messages from Alice to Bob. It is here only for sending messages from Bob to Alice.)
 
-If Bob is online, his initialization is straightforward. Alice sends an initial message to Bob with her public key <b>x</b>. Bob initializes his state in the same way, in reverse:
+<p>If Bob is online, his initialization is straightforward. Alice sends an initial message to Bob with her public key <b>x</b>. Bob initializes his state in the same way, in reverse:
 <ul>
 <li>Bob sets <b>y</b> to his published DH key pair and saves a new DH key pair to <b>y*</b>, checking to ensure it is distinct.
 <li>Both of Alice's public keys are set to <b>x</b>. 
