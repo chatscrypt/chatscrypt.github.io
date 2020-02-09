@@ -1,0 +1,28 @@
+---
+layout: post
+title: "The ChatScrypt Architecture Part VI: Anonymity vs. Portability"
+comments: true
+date: 2020-02-08
+---
+
+Not surprisingly, I've discovered the postal DH protocol has some flaws. First, when Alice sends Bob a message, instigating him to push his "half message" consisting of his next key to the server, and Alice later fetches it to send her next message, the server can link the "two instances of Alice," and thus all instances of Alice. Second, the protocol is in fact fundamentally incomplete. When Alice asks the server for the key to send Bob a message, the server can't reply with the right key unless it knows something about Alice's identity.
+
+<p>I need to point out that throughout my efforts trying to engineer a protocol for ChatScrypt, I've have been aware that eventually I would need to deal with the usability matters of a) message storage and b) device syncing. I have been putting these off because I was aware that they would reverse the security matters of a) secrecy and b) anonymity, respectively. 
+  
+<p>With regards to message storage, it was very clear that all this business regarding forward/future secrecy is entirely and inevitably destroyed by using cloud storage: A single password or encryption key would crack all of one's messages. Still, I thought it was worth pursuing because of academic interest, and further I planned to eventually implement an option for local message storage.
+  
+<p>I had thought much less about device syncing and portability. I was aware that this hurt anonymity, also fairly inevitably, but I wasn't sure. Further, it's probably fairly often that a person has only one device on much of the time, in which case anonymity could be preserved.
+  
+<p>However, just now I realized that (cloud) message storage is really simply the lowest order level of portability and device syncing. So it would destroy not just secrecy, but anonymity as well.
+  
+<p>Here is what I mean. Suppose we require that any message Alice sends to Bob must be instantly backed up to the cloud. This message must ping Alice's account and Bob's account simultaneously, thereby linking Alice and Bob. One could try to delay the ping of Alice's account, perhaps by storing the message on the server, temporarily, not yet associated to Alice (Alice at least has it in local memory when she sends it, but the issue is that both Alice and Bob's local storages are presumed unstable). But the message is irrevocably tied to Bob. Alice dare not touch the message floating in the server, even in the future, as this would immediately link her to Bob. In summary, a temporal disassociation from the moment of sending is required, but if we disallow ourselves from using local storage, this must be done on the server, in public, where the message is tied to Bob.
+   
+<p>Basically, anonymity is at complete odds with portability. Below are the reasons I've decided to forgo anonymity (in other words, the server will have complete knowledge of who you are contacting and when):
+  
+ <ul>
+<li> First of all and perhaps most importantly, anonymity is basically impossible, as IP addresses maintain a coherent identity. "Sealed sender" as Signal advertises it doesn't really do anything as far as I can tell, because chances are your IP will be static between an instance of sending and receiving, immediately tying the IP and hence all sent messages in that session to your account. The only real way around this is to refresh your IP before every single message. This is impractical. As far as I'm aware, even Tor doesn't do this.
+<li> Portability is very desirable. This means that all your devices will sync all sent and received messages in real-time. Further you can see all messages on all of your devices without any work on your part.
+<li> Anonymity, tied with the lack of portability, isn't even strictly superior with respect to security. It implies that you will store messages locally on your device. But someone as just as likely if not more likely to steal your device as your cloud storage password. It also means that you basically cannot use public computers.
+<li> Anonymity is of questionable desirability. There are very many use-cases where messages should be secret - banking, for instance, and any sort of communication requiring authentication, to prevent potential imposters. But there are much fewer use-cases where your contacts should be secret. This essentially boils down to communication with or by the persecuted. In that case, ChatScrypt probably isn't the vector you want to use anyway.
+<li> Not a real reason, but the code and logic are much simpler without anonymity!
+</ul>
